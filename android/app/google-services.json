@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1057615006122",
+    "project_id": "experteaseapp-c600f",
+    "storage_bucket": "experteaseapp-c600f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057615006122:android:d839c017290f19e3fd03d3",
+        "android_client_info": {
+          "package_name": "com.example.expert_ease"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuyUVCDlE_KRilOac-W6v-Wr6majwahko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
