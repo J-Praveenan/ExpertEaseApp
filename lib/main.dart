@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: VideoUploadingPage(),
+      home:  VideoUploadingPage(),
     );
   }
 }
 
-// AuthGate()
+// AuthGate(),

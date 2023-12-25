@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:flutter/material.dart';
 import 'package:expert_ease/utils.dart';
 import 'package:video_player/video_player.dart';
@@ -17,8 +18,8 @@ class _VideoUploadingPageState extends State<VideoUploadingPage> {
   String? _downloadURL;
 
   @override
-  void dispose() { 
-    _controller?.dispose(); 
+  void dispose() {
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -27,6 +28,19 @@ class _VideoUploadingPageState extends State<VideoUploadingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Video Upload'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoList(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.history),
+          ),
+        ],
       ),
       body: Center(
         child: _videoURL != null
