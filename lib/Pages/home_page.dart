@@ -14,8 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // instance of auth
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+   //instance of auth
+ final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // sign user out
   void signOut() {
@@ -38,12 +38,12 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: _buildUserList(),
+      body:_buildUserList(),
     );
   }
 
   // build a list of users except for the current logged in user
-  Widget _buildUserList() {
+ Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('users').snapshots(),
       builder: (context, snapshot) {
@@ -62,32 +62,36 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }
+  } 
 
-  // build individual user list items
-  Widget _builderUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+Widget _builderUserListItem(DocumentSnapshot document) {
+  Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
-    // display all users except current user
-    if (_auth.currentUser!.email != data['email']) {
-      return ListTile(
-        title: Text(data['email']),
-        onTap: () {
-          // pass the clicked user's UID to the
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserEmail: data['email'],
-                receiverUserID: data['uid'],
-              ),
+  // Check for null emails and perform a case-insensitive comparison
+  //String currentUserEmail = _auth.currentUser?.email?.toLowerCase() ?? '';
+  //String firestoreUserEmail = (data['email'] as String?)?.toLowerCase() ?? '';
+
+  // Display all users except the current user
+  if (_auth.currentUser!.email != data['email']) {
+    return ListTile(
+      title: Text(data['email']),
+      onTap: () {
+        // Navigate to the chat page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPage(
+              receiverUserEmail: data['email'],
+              receiverUserID: data['uid'],
             ),
-          );
-        },
-      );
-    } else {
-      // return empty container
-      return Container();
-    }
+          ),
+        );
+      },
+    );
+  } else {
+    // Return an empty container for the current user
+    return Container();
   }
+}
+
 }
