@@ -1,6 +1,10 @@
+import 'package:expert_ease/Pages/home_page.dart';
+import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/onBoardingScreen.dart';
+import 'package:expert_ease/Pages/tutor_register_page.dart';
 import 'package:expert_ease/Pages/video_uploading_page.dart';
 import 'package:expert_ease/firebase_options.dart';
+import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:expert_ease/services/auth/auth_gate.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +30,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
+
+
       home:  AuthGate(),
+
     );
   }
 }
