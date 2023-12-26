@@ -13,12 +13,15 @@ class OnBoardingScreen extends StatefulWidget {
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingScreenState extends State<OnBoardingScreen>
+     {
   // controller to keep track of which page we're on
   PageController _controller = PageController();
 
   // keep track of if we are on the last page or not
   bool onLastPage = false;
+
+ 
 
   @override
   Widget build(BuildContext context) {

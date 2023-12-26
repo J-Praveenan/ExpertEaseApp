@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:expert_ease/intro_screens/play_video.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,9 @@ class _VideoListState extends State<VideoList> {
       appBar: AppBar(
         title: const Text('Video List'),
       ),
+
+     
+
       body: Center(
           child: Padding(
         padding: const EdgeInsets.all(15.0),
