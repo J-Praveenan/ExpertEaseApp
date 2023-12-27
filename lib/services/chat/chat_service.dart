@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 class ChatService extends ChangeNotifier {
   //get instance of auth and firestore
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   //send message
   Future<void> sendMessage(String receiverId, String message) async {
-//get current user info
+  //get current user info
     final String currentUserId = _firebaseAuth.currentUser!.uid;
     final String currentUserEmail = _firebaseAuth.currentUser!.email.toString();
     final Timestamp timestamp = Timestamp.now();
 
-//create a new message
+  //create a new message
     Message newMessage = Message(
       senderId: currentUserId,
       senderEmail: currentUserEmail,
@@ -31,7 +31,7 @@ class ChatService extends ChangeNotifier {
         ids.join("_"); //combine the ids into a single to use as a chatroomID
 
 //add new message to database
-    await _firestore
+    await _fireStore
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
@@ -41,16 +41,16 @@ class ChatService extends ChangeNotifier {
   //get message
   Stream<QuerySnapshot>getMessages(String userId,String otherUserId){
     //construct chat room id from user ids (sorted to ensure it matches the id used when sending messages)
-    List<String>ids=[userId,otherUserId];
+    List<String> ids = [userId,otherUserId];
     ids.sort();
-    String chatRoomId =ids.join("_");
+    String chatRoomId = ids.join("_");
 
 
-    return _firestore
+    return _fireStore
     .collection('chat_rooms')
     .doc(chatRoomId)
     .collection('messages')
-    .orderBy('timeStamp',descending:false)
+    .orderBy('timestamp',descending:false)
     .snapshots();
   }
 }
