@@ -13,17 +13,21 @@ class AuthService extends ChangeNotifier {
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      UserCredential userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+
+
 
       // add a new document for the user in users collection if it doesn't already exists
       _fireStore.collection('users').doc(userCredential.user!.uid).set({
+       
         'uid': userCredential.user!.uid,
         'email': email,
       }, SetOptions(merge: true));
+      // Check if the user has the expected role
+   
+      
+    
 
       return userCredential;
     }
@@ -31,26 +35,32 @@ class AuthService extends ChangeNotifier {
     on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
+
+   
   }
 
   // create a new user
   Future<UserCredential> signUpWithEmailAndPassword(
-      String email, String password) async {
+      String role, String email, String password) async {
     try {
+       print('Role: $role, Email: $email, Password: $password');
       UserCredential userCredential =
           await _firebaseAuth.createUserWithEmailAndPassword(
+      
         email: email,
         password: password,
       );
 
       // after creating the user, create a new document for the user in the users collection
       _fireStore.collection('users').doc(userCredential.user!.uid).set({
+        'role': role,
         'uid': userCredential.user!.uid,
         'email': email,
       });
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
+       print('Firebase Auth Exception: ${e.code}');
       throw Exception(e.code);
     }
   }
