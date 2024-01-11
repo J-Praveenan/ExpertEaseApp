@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../Pages/tutor_home.dart';
+import '../../Pages/learner_home.dart';
 
 class AuthService extends ChangeNotifier {
   // instance of auth
@@ -8,10 +10,18 @@ class AuthService extends ChangeNotifier {
 
   // instance of firestore
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-
+  Future<String?> getUserRole(String uid) async {
+    try {
+      DocumentSnapshot userDoc = await _fireStore.collection('users').doc(uid).get();
+      return userDoc['role'];
+    } catch (e) {
+      print('Error getting user role: $e');
+      return null;
+    }
+  }
   // sign user in
   Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password,BuildContext context,void Function(BuildContext, Widget) navigate) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
@@ -26,7 +36,15 @@ class AuthService extends ChangeNotifier {
       }, SetOptions(merge: true));
       // Check if the user has the expected role
    
-      
+      DocumentSnapshot userDoc = await _fireStore.collection('users').doc(userCredential.user!.uid).get();
+      String userRole = userDoc['role'];
+
+      // Navigate based on user role
+        if (userRole == 'Tutor') {
+        navigate(context, TutorHome());
+      } else if (userRole == 'Learner') {
+        navigate(context, LearnerHome());
+      }
     
 
       return userCredential;
@@ -57,6 +75,8 @@ class AuthService extends ChangeNotifier {
         'uid': userCredential.user!.uid,
         'email': email,
       });
+
+
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

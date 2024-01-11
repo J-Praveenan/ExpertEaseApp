@@ -23,10 +23,19 @@ class _LoginPageState extends State<LoginPage> {
   void signIn() async {
     final authService = Provider.of<AuthService>(context, listen: false);
 
-    try {
-      await authService.signInWithEmailAndPassword(
-          emailController.text, passwordController.text);
-    } catch (e) {
+   try {
+    await authService.signInWithEmailAndPassword(
+      emailController.text,
+      passwordController.text,
+      context,
+      (context, widget) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => widget),
+        );
+      },
+    );
+  } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
