@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/components/my_button.dart';
 import 'package:expert_ease/components/my_text_field.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -16,6 +19,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final roleController = TextEditingController();
+  String selectedRole = "0";
 
   //sign up user
   void signUp() async {
@@ -28,12 +33,27 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    // Check if a role is selected
+   if (selectedRole == "0") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select your role!"),
+        ),
+      );
+      return;
+    }
+
+    print("Selected Role: $selectedRole"); // Add this print statement
+
     // get auth service
     final authService = Provider.of<AuthService>(context, listen: false);
-
-    try {
+String roleName = await getRoleName(selectedRole);
+        try {
       await authService.signUpWithEmailAndPassword(
-          emailController.text, passwordController.text);
+        roleName,
+        emailController.text,
+        passwordController.text,
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -41,8 +61,21 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
-  }
 
+  }
+// Function to retrieve the role name from Firestore using the role id
+Future<String> getRoleName(String roleId) async {
+  DocumentSnapshot roleSnapshot = await FirebaseFirestore.instance
+      .collection('roles')
+      .doc(roleId)
+      .get();
+
+  if (roleSnapshot.exists) {
+    return roleSnapshot.get('name');
+  } else {
+    throw Exception("Role not found in Firestore");
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,9 +87,6 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const SizedBox(
-                height: 50,
-              ),
               //logo
               Icon(
                 Icons.thumbs_up_down_sharp,
@@ -95,6 +125,60 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 30,
               ),
 
+              // MyTextField(
+              //   controller: roleController,
+              //   hintText: 'role',
+              //   obscureText: false,
+              // ),
+
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('roles')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    List<DropdownMenuItem> rolesItems = [];
+                    if (!snapshot.hasData) {
+                      const CircularProgressIndicator();
+                    } else {
+                      final roles = snapshot.data?.docs.reversed.toList();
+                      rolesItems.add(
+                        DropdownMenuItem(
+                          value: "0",
+                          child: Text('Select your Role'),
+                        ),
+                      );
+
+                      for (var role in roles!) {
+                        rolesItems.add(
+                          DropdownMenuItem(
+                            value: role.id,
+                            child: Text(
+                              role['name'],
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    return DropdownButton(
+                      items: rolesItems,
+                      onChanged: (rolesValue) {
+                        
+                        setState(() {
+                          selectedRole = rolesValue;
+                         
+                        });
+
+                        print(rolesValue);
+                        
+                      },
+                      value: selectedRole,
+                      isExpanded: false,
+                    );
+                  }),
+
+              const SizedBox(
+                height: 10,
+              ),
               //email textfield
               MyTextField(
                 controller: emailController,
