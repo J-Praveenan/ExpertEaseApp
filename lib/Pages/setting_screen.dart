@@ -1,7 +1,33 @@
+import 'package:expert_ease/Pages/login_page.dart';
+import 'package:expert_ease/services/auth/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+
+  // sign user out
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // sign user out
+  void signOut() {
+    // get auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    authService.signOut();
+  
+    // Navigate to the login page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage(onTap: () {  },)),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -155,7 +181,9 @@ class SettingsScreen extends StatelessWidget {
             Divider(height: 40),
          
             ListTile(
-              onTap: () {},
+              onTap: () {
+signOut();
+              },
               leading: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(

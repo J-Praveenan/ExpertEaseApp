@@ -1,8 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class HomeScreen extends StatelessWidget {
-  List symptoms = [
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  User? user;
+  List<Map<String, dynamic>> tutors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    user = _auth.currentUser;
+    loadTutors();
+  }
+
+  Future<void> loadTutors() async {
+    final QuerySnapshot tutorSnapshot = await _firestore
+        .collection('users')
+        .where('role', isEqualTo: 'Tutor')
+        .get();
+
+    setState(() {
+      tutors = tutorSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    });
+  }
+
+  List<String> symptoms = [
     "ICT",
     "Maths",
     "English",
@@ -10,7 +48,7 @@ class HomeScreen extends StatelessWidget {
     "Web Development",
   ];
 
-  List imgs = [
+  List<String> imgs = [
     "tutor1.jpeg",
     "tutor2.jpeg",
     "tutor3.jpeg",
@@ -19,6 +57,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = _auth.currentUser;
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.only(top: 40),
@@ -31,9 +71,9 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Hello Alex",
+                    "Hello ${user?.email ?? 'User'}",
                     style: TextStyle(
-                      fontSize: 35,
+                      fontSize: 25,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -219,17 +259,20 @@ class HomeScreen extends StatelessWidget {
             GridView.builder(
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemCount: 4,
+              itemCount: tutors.length,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
+                Map<String, dynamic> tutorData = tutors[index];
+
                 return InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TutorDetails(),
-                        ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TutorDetails(),
+                      ),
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),
@@ -253,7 +296,7 @@ class HomeScreen extends StatelessWidget {
                           backgroundImage: AssetImage("images/${imgs[index]}"),
                         ),
                         Text(
-                          "Ms.Tutor Name",
+                          "${tutorData['email']}",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -283,6 +326,7 @@ class HomeScreen extends StatelessWidget {
                           ],
                         )
                       ],
+                      
                     ),
                   ),
                 );

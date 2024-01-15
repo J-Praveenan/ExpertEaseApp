@@ -1,3 +1,5 @@
+import 'package:expert_ease/Pages/learner_home_page.dart';
+import 'package:expert_ease/Pages/sample_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:expert_ease/services/auth/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,11 +36,11 @@ class AuthGate extends StatelessWidget {
                     if (userRole == 'Tutor') {
                       return const TutorHome();
                     } else if (userRole == 'Learner') {
-                      return const LearnerHome();
+                      return  HomeScreen();
                     }
                   }
-
-                  return const HomePage(); // Fallback to HomePage if role not determined
+return const LoginOrRegister();
+                 // return const HomePage(); // Fallback to HomePage if role not determined
                 },
               );
             }

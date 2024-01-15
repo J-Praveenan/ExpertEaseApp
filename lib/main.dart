@@ -40,5 +40,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//AuthGate()
+// AuthGate(),
+// NavBarRoots(),
 //const
