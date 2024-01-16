@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/login_page.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,9 +12,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User? user;
 
   // sign user out
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // sign user out
   void signOut() {
@@ -21,15 +24,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final authService = Provider.of<AuthService>(context, listen: false);
 
     authService.signOut();
-  
+
     // Navigate to the login page
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage(onTap: () {  },)),
+      MaterialPageRoute(
+          builder: (context) => LoginPage(
+                onTap: () {},
+              )),
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    User? user = _auth.currentUser;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(top: 50, left: 20, right: 20),
@@ -50,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 backgroundImage: AssetImage("images/tutor1.jpeg"),
               ),
               title: Text(
-                "Ms. Tutor Name",
+                "${user?.email ?? 'User'}",
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 25,
@@ -60,7 +68,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Divider(height: 50),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                //manage account function call
+
+                
+              },
               leading: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -179,10 +191,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: Icon(Icons.arrow_forward_ios_rounded),
             ),
             Divider(height: 40),
-         
             ListTile(
               onTap: () {
-signOut();
+                signOut();
               },
               leading: Container(
                 padding: EdgeInsets.all(10),
@@ -205,7 +216,6 @@ signOut();
               ),
               trailing: Icon(Icons.arrow_forward_ios_rounded),
             ),
-      
           ],
         ),
       ),

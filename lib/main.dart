@@ -1,5 +1,6 @@
 import 'package:expert_ease/Pages/home_page.dart';
 import 'package:expert_ease/Pages/learner_home_page.dart';
+import 'package:expert_ease/Pages/manage_tutor_profile.dart';
 import 'package:expert_ease/Pages/onBoardingScreen.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/tutor_register_page.dart';
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
 
-      home:OnBoardingScreen(),
+      home:UpdateUserProfile()
+     ,
 
     );
   }
@@ -43,3 +45,4 @@ class MyApp extends StatelessWidget {
 // AuthGate(),
 // NavBarRoots(),
 //const
+// OnBoardingScreen()

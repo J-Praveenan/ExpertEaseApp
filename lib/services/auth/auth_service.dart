@@ -20,6 +20,11 @@ class AuthService extends ChangeNotifier {
       return null;
     }
   }
+
+
+  // get current user ------------------------------------------------------------------------------
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;}
   // sign user in
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password,BuildContext context,void Function(BuildContext, Widget) navigate) async {

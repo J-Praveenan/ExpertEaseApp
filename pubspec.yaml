@@ -47,6 +47,7 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   custom_clippers: ^2.0.0
   
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
