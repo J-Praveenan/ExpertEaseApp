@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class TutorDetails extends StatelessWidget {
+
+  final Map<String, dynamic> tutorData;
+    TutorDetails({required this.tutorData});
   List imgs = [
     "tutor1.jpeg",
     "tutor2.jpeg",
@@ -57,7 +60,7 @@ class TutorDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            "Ms. Tutor Name",
+                            "${tutorData['email']}",
                             style: TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.w500,

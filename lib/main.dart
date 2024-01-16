@@ -1,7 +1,7 @@
 import 'package:expert_ease/Pages/home_page.dart';
 import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/onBoardingScreen.dart';
-import 'package:expert_ease/Pages/sample_home.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/tutor_register_page.dart';
 import 'package:expert_ease/Pages/video_uploading_page.dart';
 import 'package:expert_ease/firebase_options.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
 
-      home:NavBarRoots(),
+      home:OnBoardingScreen(),
 
     );
   }

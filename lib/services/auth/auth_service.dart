@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expert_ease/Pages/sample_home.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../Pages/tutor_home.dart';
@@ -44,7 +44,7 @@ class AuthService extends ChangeNotifier {
         if (userRole == 'Tutor') {
         navigate(context, TutorHome());
       } else if (userRole == 'Learner') {
-        navigate(context, HomeScreen());
+        navigate(context, LearnerHomeScreen());
       }
     
 

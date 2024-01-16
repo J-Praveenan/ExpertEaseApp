@@ -1,41 +1,40 @@
 import 'package:expert_ease/components/my_button.dart';
-import 'package:expert_ease/components/my_text_field.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
-  const LoginPage({
-    super.key,
-    required this.onTap,
-  });
+  const LoginPage({super.key, required this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late Color myColor;
+  late Size mediaSize;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool rememberUser = false;
 
   //sign in user
   void signIn() async {
     final authService = Provider.of<AuthService>(context, listen: false);
 
-   try {
-    await authService.signInWithEmailAndPassword(
-      emailController.text,
-      passwordController.text,
-      context,
-      (context, widget) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => widget),
-        );
-      },
-    );
-  } catch (e) {
+    try {
+      await authService.signInWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
+        context,
+        (context, widget) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => widget),
+          );
+        },
+      );
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -48,127 +47,184 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    //logo
-                    Icon(
-                      Icons.thumbs_up_down_sharp,
-                      size: 50,
-                      color: Color.fromARGB(255, 5, 115, 134),
-                    ),
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF7165D6),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(children: [
+          Positioned(top: 80, child: _buildTop()),
+          Positioned(bottom: 0, child: _buildBottom()),
+        ]),
+      ),
+    );
+  }
 
-                    const SizedBox(
-                      height: 5,
-                    ),
+  Widget _buildTop() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 0),
+          Image.asset(
+            "images/eea.png", 
+            height: 140, 
+            width: 340, 
+           
+          ),
+        ],
+      ),
+    );
+  }
 
-                    // ExpertEase(Ee)
-                    const Text(
-                      "ExpertEase",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 5, 115, 134),
-                      ),
-                    ),
+  Widget _buildBottom() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        )),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: _buildForm(),
+        ),
+      ),
+    );
+  }
 
-                    const SizedBox(
-                      height: 10,
-                    ),
+  Widget _buildForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Login",
+          style: TextStyle(
+              color: Color(0xFF7165D6), fontSize: 32, fontWeight: FontWeight.w500),
+        ),
+        _buildGreyText("Please login with your information"),
+        const SizedBox(height: 60),
+        _buildGreyText("Email"),
+        _buildInputEmail(emailController),
+        const SizedBox(height: 40),
+        _buildGreyText("Password"),
+        _buildInputPassword(passwordController, isPassword: true),
+        const SizedBox(height: 20),
+        _buildRememberForgot(),
+        const SizedBox(height: 20),
+        MyButton(onTap: signIn, text: "Sign In"),
+        const SizedBox(height: 10),
+        _buildOtherLogin(),
+      ],
+    );
+  }
 
-                    //welcome back message
-                    const Text(
-                      "Welcome to Our ExpertEase App!",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color.fromARGB(255, 5, 115, 134),
-                      ),
-                    ),
+  Widget _buildGreyText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+          color: Color.fromARGB(255, 107, 106, 106), fontSize: 15),
+    );
+  }
 
-                    const SizedBox(
-                      height: 10,
-                    ),
+  Widget _buildInputEmail(TextEditingController controller,
+      {isPassword = false}) {
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        suffixIcon: Icon(
+          Icons.email,
+          color: Color(0xFF7165D6),
+        ),
+      ),
+      obscureText: isPassword,
+    );
+  }
 
-                    // Login
-                    const Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 5, 115, 134),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+  Widget _buildInputPassword(TextEditingController controller,
+      {isPassword = false}) {
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        suffixIcon: Icon(
+          Icons.lock,
+          color: Color(0xFF7165D6),
+        ),
+      ),
+      obscureText: isPassword,
+    );
+  }
 
-                    const SizedBox(
-                      height: 30,
-                    ),
+  Widget _buildRememberForgot() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Checkbox(
+                value: rememberUser,
+                onChanged: (value) {
+                  setState(() {
+                    rememberUser = value!;
+                  });
+                }),
+            _buildGreyText("Remember me"),
+          ],
+        ),
+        TextButton(
+            onPressed: () {}, child: _buildGreyText("forgot password"))
+      ],
+    );
+  }
 
-                    //email textfield
-                    MyTextField(
-                      controller: emailController,
-                      hintText: 'Email',
-                      obscureText: false,
-                    ),
+  
 
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //password textfield
-                    MyTextField(
-                      controller: passwordController,
-                      hintText: 'Password',
-                      obscureText: true,
-                    ),
-
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    //sign in button
-                    MyButton(onTap: signIn, text: "Sign In"),
-
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    //not a member? register now
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Do not have an Account?',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 7, 141, 165),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        GestureDetector(
-                          onTap: widget.onTap,
-                          child: const Text(
-                            'Register now',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 7, 141, 165),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ]),
+  Widget _buildOtherLogin() {
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Do not have an Account?',
+                style: TextStyle(
+                  color: Color(0xFF7165D6),
+                ),
+              ),
+              const SizedBox(
+            width: 4,
+          ),
+          GestureDetector(
+            onTap: widget.onTap,
+            child: const Text(
+              'Register now',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF7165D6),
+              ),
             ),
           ),
-        ),
+            ],
+          ),
+          
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Tab(icon: Image.asset("images/facebook.png")),
+              Tab(icon: Image.asset("images/twitter.png")),
+              Tab(icon: Image.asset("images/github.png")),
+            ],
+          )
+        ],
       ),
     );
   }

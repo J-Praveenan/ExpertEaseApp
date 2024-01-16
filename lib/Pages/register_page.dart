@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/components/my_button.dart';
-import 'package:expert_ease/components/my_text_field.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -16,11 +13,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  late Color myColor;
+  late Size mediaSize;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final roleController = TextEditingController();
   String selectedRole = "0";
+  bool rememberUser = false;
 
   //sign up user
   void signUp() async {
@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     // Check if a role is selected
-   if (selectedRole == "0") {
+    if (selectedRole == "0") {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Please select your role!"),
@@ -47,8 +47,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // get auth service
     final authService = Provider.of<AuthService>(context, listen: false);
-String roleName = await getRoleName(selectedRole);
-        try {
+    String roleName = await getRoleName(selectedRole);
+    try {
       await authService.signUpWithEmailAndPassword(
         roleName,
         emailController.text,
@@ -61,193 +61,289 @@ String roleName = await getRoleName(selectedRole);
         ),
       );
     }
-
   }
-// Function to retrieve the role name from Firestore using the role id
-Future<String> getRoleName(String roleId) async {
-  DocumentSnapshot roleSnapshot = await FirebaseFirestore.instance
-      .collection('roles')
-      .doc(roleId)
-      .get();
 
-  if (roleSnapshot.exists) {
-    return roleSnapshot.get('name');
-  } else {
-    throw Exception("Role not found in Firestore");
+  // Function to retrieve the role name from Firestore using the role id
+  Future<String> getRoleName(String roleId) async {
+    DocumentSnapshot roleSnapshot =
+        await FirebaseFirestore.instance.collection('roles').doc(roleId).get();
+
+    if (roleSnapshot.exists) {
+      return roleSnapshot.get('name');
+    } else {
+      throw Exception("Role not found in Firestore");
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-          child: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              //logo
-              Icon(
-                Icons.thumbs_up_down_sharp,
-                size: 50,
-                color: Color.fromARGB(255, 5, 115, 134),
-              ),
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF7165D6),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(children: [
+          Positioned(top: 70, child: _buildTop()),
+          Positioned(bottom: 0, child: _buildBottom()),
+        ]),
+      ),
+    );
+  }
 
-              const SizedBox(
-                height: 5,
-              ),
+  Widget _buildTop() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 0),
+          Image.asset(
+            "images/eea.png",
+            height: 140,
+            width: 340,
+          ),
+        ],
+      ),
+    );
+  }
 
-              // ExpertEase(Ee)
-              const Text(
-                "ExpertEase",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 5, 115, 134),
-                ),
-              ),
+  Widget _buildBottom() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        )),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: _buildForm(),
+        ),
+      ),
+    );
+  }
 
-              const SizedBox(
-                height: 10,
-              ),
+  Widget _buildForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "SignUp",
+          style: TextStyle(
+              color: Color(0xFF7165D6),
+              fontSize: 32,
+              fontWeight: FontWeight.w500),
+        ),
+        _buildGreyText("Please register with your information"),
+        const SizedBox(height: 40),
+        _buildGreyText("Email"),
+        _buildInputFieldEmail(emailController),
+        const SizedBox(height: 20),
+        _buildGreyText("Password"),
+        _buildInputFieldPassword(passwordController),
+        const SizedBox(height: 20),
+        _buildGreyText("Confirm Password"),
+        _buildInputFieldPassword(confirmPasswordController),
+        const SizedBox(height: 20),
+        // _buildGreyText("Select your role"),
+        // _buildInputFieldRole(roleController),
 
-              //Create account message
-              const Text(
-                "Let's create an account for you!",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 5, 115, 134),
-                ),
-              ),
-
-              const SizedBox(
-                height: 30,
-              ),
-
-              // MyTextField(
-              //   controller: roleController,
-              //   hintText: 'role',
-              //   obscureText: false,
-              // ),
-
-              StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('roles')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    List<DropdownMenuItem> rolesItems = [];
-                    if (!snapshot.hasData) {
-                      const CircularProgressIndicator();
-                    } else {
-                      final roles = snapshot.data?.docs.reversed.toList();
-                      rolesItems.add(
-                        DropdownMenuItem(
-                          value: "0",
-                          child: Text('Select your Role'),
-                        ),
-                      );
-
-                      for (var role in roles!) {
-                        rolesItems.add(
-                          DropdownMenuItem(
-                            value: role.id,
-                            child: Text(
-                              role['name'],
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                    return DropdownButton(
-                      items: rolesItems,
-                      onChanged: (rolesValue) {
-                        
-                        setState(() {
-                          selectedRole = rolesValue;
-                         
-                        });
-
-                        print(rolesValue);
-                        
-                      },
-                      value: selectedRole,
-                      isExpanded: false,
-                    );
-                  }),
-
-              const SizedBox(
-                height: 10,
-              ),
-              //email textfield
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              //password textfield
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              //confirm password textfield
-              MyTextField(
-                controller: confirmPasswordController,
-                hintText: 'Confirm password',
-                obscureText: true,
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              //sign un button
-              MyButton(onTap: signUp, text: "Sign Up"),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              //Already have an Account? Login now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Already have an Account?',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 5, 115, 134),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  GestureDetector(
-                    onTap: widget.onTap,
-                    child: const Text(
-                      'Login now',
+        StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('roles').snapshots(),
+            builder: (context, snapshot) {
+              List<DropdownMenuItem<String>> rolesItems = [];
+              if (!snapshot.hasData) {
+                const CircularProgressIndicator();
+              } else {
+                final roles = snapshot.data?.docs.reversed.toList();
+                rolesItems.add(
+                  DropdownMenuItem<String>(
+                    value: "0",
+                    child: Text(
+                      'Select your Role',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 5, 115, 134),
+                        color: Color.fromARGB(255, 107, 106, 106), // Replace with your desired color
+                        // Optional: italicize the text
                       ),
                     ),
-                  )
-                ],
-              )
-            ]),
-          ),
+                  ),
+                );
+
+                for (var role in roles!) {
+                  rolesItems.add(
+                    DropdownMenuItem<String>(
+                      value: role.id,
+                      child: Text(
+                        role['name'],
+                      ),
+                    ),
+                  );
+                }
+              }
+              return Container(
+                child: DropdownButton<String>(
+                  items: rolesItems,
+                  onChanged: (rolesValue) {
+                    setState(() {
+                      selectedRole = rolesValue!;
+                    });
+                    print(rolesValue);
+                  },
+                  value: selectedRole,
+                  isExpanded: false,
+                  underline: Container(), // Remove the default underline
+                  icon: Padding(
+                    padding: EdgeInsets.only(
+                        left: 188), // Adjust the padding as needed
+                    child: Icon(
+                      Icons.arrow_drop_down_circle,
+                      color: Color(0xFF7165D6),
+                    ),
+                  ),
+                  style: TextStyle(
+                   color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              );
+            }),
+        const SizedBox(height: 20),
+        MyButton(onTap: signUp, text: "Register"),
+        const SizedBox(height: 20),
+        _buildLoginText(),
+      ],
+    );
+  }
+
+  Widget _buildGreyText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+          color: Color.fromARGB(255, 107, 106, 106), fontSize: 15),
+    );
+  }
+
+  Widget _buildInputFieldEmail(TextEditingController controller,) {
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        suffixIcon: Icon(
+          Icons.email,
+          color: Color(0xFF7165D6),
         ),
-      )),
+      ),
+      obscureText: false,
+    );
+  }
+
+  Widget _buildInputFieldPassword(TextEditingController controller,
+      {isPassword = false}) {
+    return TextField(
+      controller: controller,
+      decoration: const InputDecoration(
+        suffixIcon: Icon(
+          Icons.lock,
+          color: Color(0xFF7165D6),
+        ),
+      ),
+      obscureText: true,
+    );
+  }
+
+  // Widget _buildInputFieldRole() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       _buildGreyText("Select your role"),
+  //       Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 10),
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(8),
+  //           border: Border.all(color: Color(0xFF7165D6)),
+  //         ),
+  //         child: StreamBuilder<QuerySnapshot>(
+  //           stream: FirebaseFirestore.instance.collection('roles').snapshots(),
+  //           builder: (context, snapshot) {
+  //             List<DropdownMenuItem<String>> rolesItems = [];
+  //             if (!snapshot.hasData) {
+  //               return CircularProgressIndicator();
+  //             } else {
+  //               final roles = snapshot.data?.docs.reversed.toList();
+  //               rolesItems.add(
+  //                 DropdownMenuItem(
+  //                   value: "0",
+  //                   child: Text('Select your Role'),
+  //                 ),
+  //               );
+
+  //               for (var role in roles!) {
+  //                 rolesItems.add(
+  //                   DropdownMenuItem(
+  //                     value: role.id,
+  //                     child: Text(
+  //                       role['name'],
+  //                     ),
+  //                   ),
+  //                 );
+  //               }
+  //             }
+  //             return DropdownButton<String>(
+  //               items: rolesItems,
+  //               onChanged: (rolesValue) {
+  //                 setState(() {
+  //                   selectedRole = rolesValue!;
+  //                 });
+  //                 print(rolesValue);
+  //               },
+  //               value: selectedRole,
+  //               isExpanded: false,
+  //               underline: Container(), // Remove the default underline
+  //               icon: Icon(
+  //                 Icons.arrow_drop_down_circle,
+  //                 color: Color(0xFF7165D6),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildLoginText() {
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Already have an Account?',
+                style: TextStyle(
+                  color: Color(0xFF7165D6),
+                ),
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              GestureDetector(
+                onTap: widget.onTap,
+                child: const Text(
+                  'Login',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF7165D6),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

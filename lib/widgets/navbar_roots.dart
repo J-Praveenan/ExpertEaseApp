@@ -1,5 +1,5 @@
 import 'package:expert_ease/Pages/messages_screen.dart';
-import 'package:expert_ease/Pages/sample_home.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_home.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +14,7 @@ class _NavBarRootsState extends State<NavBarRoots> {
   int _selectedIndex = 0;
   final _screens = [
     //Home Screen
-    HomeScreen(),
+    LearnerHomeScreen(),
 
     //Messages Screen
     MessageScreen(),
