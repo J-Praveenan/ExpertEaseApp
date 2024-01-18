@@ -1,11 +1,12 @@
 import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
+import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:expert_ease/services/auth/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../Pages/home_page.dart';
-import '../../Pages/tutor_home.dart';
+import '../../Pages/vdo.dart';
 import '../../Pages/learner_home.dart';
 
 class AuthGate extends StatelessWidget {
@@ -34,7 +35,7 @@ class AuthGate extends StatelessWidget {
                   if (roleSnapshot.hasData) {
                     String userRole = roleSnapshot.data.toString();
                     if (userRole == 'Tutor') {
-                      return const TutorHome();
+                      return  tutScreen();
                     } else if (userRole == 'Learner') {
                       return  LearnerHomeScreen();
                     }

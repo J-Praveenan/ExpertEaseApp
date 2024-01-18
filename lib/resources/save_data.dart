@@ -28,7 +28,7 @@ class StoreData {
       if(name.isNotEmpty || bio.isNotEmpty){
 
       String imageUrl = await uploadImageToStorage('profileImage', file);
-      await _firestore.collection('userProfile').add({
+      await _firestore.collection('users').add({
         'name': name,
         'bio': bio,
         'address':address,

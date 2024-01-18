@@ -1,60 +1,114 @@
 import 'dart:typed_data';
 
-import 'package:expert_ease/resources/save_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/components/my_button.dart';
+import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:expert_ease/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class UpdateUserProfile extends StatefulWidget {
-  const UpdateUserProfile({Key? key}) : super(key: key);
+  final void Function()? onTap;
+  const UpdateUserProfile({super.key, required this.onTap});
 
   @override
   State<UpdateUserProfile> createState() => _UpdateUserProfileState();
 }
 
 class _UpdateUserProfileState extends State<UpdateUserProfile> {
+  late Color myColor;
+  late Size mediaSize;
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final subjectController = TextEditingController();
+  final mediumController = TextEditingController();
+  final bioController = TextEditingController();
   Uint8List? _image;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController bioController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController subjectController = TextEditingController();
-  final TextEditingController mediumController = TextEditingController();
-  void selectImage() async {
+  // String selectedRole = "0";
+  bool rememberUser = false;
+
+  
+
+  // select Image
+   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
     });
   }
 
-  void saveProfile() async {
-    String name = nameController.text;
-    String bio = bioController.text;
-    String address = addressController.text;
-    String subject = subjectController.text;
-    String medium = mediumController.text;
-    String resp =
-        await StoreData().saveData(name: name,address: address,subject: subject,medium: medium, bio: bio, file: _image!);
+  //sign up user
+  void createNewProfile() async {
+
+
+    // get auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+    // String roleName = await getRoleName(selectedRole);
+    try {
+      await authService.createNewUserProfile(
+       
+        nameController.text,
+        addressController.text,
+        subjectController.text,
+        mediumController.text,
+        bioController.text,
+        _image, // Pass the image to the method
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 
   @override
   void dispose() {
     nameController.dispose();
-    bioController.dispose();
     addressController.dispose();
     subjectController.dispose();
     mediumController.dispose();
+    bioController.dispose();
     super.dispose();
+  }
+
+  // Function to retrieve the role name from Firestore using the role id
+  Future<String> getRoleName(String roleId) async {
+    DocumentSnapshot roleSnapshot =
+        await FirebaseFirestore.instance.collection('roles').doc(roleId).get();
+
+    if (roleSnapshot.exists) {
+      return roleSnapshot.get('name');
+    } else {
+      throw Exception("Role not found in Firestore");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Profile'),
-        backgroundColor: Colors.blue, // Customize the app bar color
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF7165D6),
       ),
-      body: SingleChildScrollView(
-        child: Container(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(children: [
+          Positioned(top: 30, child: _buildTop()),
+          Positioned(bottom: 0, child: _buildBottom()),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildTop() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Container(
+          
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,7 +124,7 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
                       : const CircleAvatar(
                           radius: 60,
                           backgroundImage: NetworkImage(
-                              'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
+                              'https://cdn.vectorstock.com/i/preview-1x/52/68/purple-user-icon-in-the-circle-thin-line-vector-23745268.webp'),
                         ),
                   Positioned(
                     bottom: -10,
@@ -79,79 +133,91 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
                       onPressed: selectImage,
                       icon: const Icon(Icons.add_a_photo),
                       color:
-                          Colors.blue, // Customize the add photo button color
+                          Color.fromARGB(255, 249, 250, 250), // Customize the add photo button color
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter Your Name',
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: addressController,
-                decoration: InputDecoration(
-                  hintText: 'Address',
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: subjectController,
-                decoration: InputDecoration(
-                  hintText: 'Subject',
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: mediumController,
-                decoration: InputDecoration(
-                  hintText: 'Medium',
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: bioController,
-                maxLines: 3, // Allow multiple lines for bio
-                decoration: InputDecoration(
-                  hintText: 'Enter Bio',
-                  contentPadding: const EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: saveProfile,
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Customize the button color
-                ),
-                child: const Text('Save Profile'),
-              ),
-            ],
+            ]
           ),
+          ),
+    );
+      
+  }
+
+  Widget _buildBottom() {
+    return SizedBox(
+      width: mediaSize.width,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        )),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: _buildForm(),
         ),
       ),
     );
   }
+
+  Widget _buildForm() {
+    return Column(
+      
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        _buildGreyText("Name"),
+        _buildInputFieldEmail(nameController),
+        const SizedBox(height: 20),
+        _buildGreyText("Address"),
+         _buildInputFieldEmail(addressController),
+        const SizedBox(height: 20),
+        _buildGreyText("Subject"),
+         _buildInputFieldEmail(subjectController),
+        const SizedBox(height: 20),
+         _buildGreyText("medium"),
+         _buildInputFieldEmail(mediumController),
+        const SizedBox(height: 20),
+         _buildGreyText("Bio"),
+         _buildInputFieldEmail(bioController),
+        const SizedBox(height: 20),
+
+        MyButton(onTap: createNewProfile, text: "Save"),
+      
+      ],
+    );
+  }
+
+  Widget _buildGreyText(String text) {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(
+        
+        text,
+        style: const TextStyle(
+            
+            color: Color.fromARGB(255, 107, 106, 106), fontSize: 15),
+      ),
+    );
+  }
+
+  Widget _buildInputFieldEmail(TextEditingController controller,) {
+    return TextField(
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 13),
+      controller: controller,
+      decoration: const InputDecoration(
+        
+        
+      ),
+      obscureText: false,
+    );
+  }
+
+ 
+
+
+
 }
