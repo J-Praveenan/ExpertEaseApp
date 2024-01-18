@@ -1,5 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:expert_ease/services/auth/auth_service.dart';
+// import 'package:expert_ease/widgets/navbar_roots.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
@@ -27,22 +28,24 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: const Text('Learner Home Page'),
+//         title: const Text('Tutor Home Page'),
 //         actions: [
 //           // sign out button
 //           IconButton(
 //             onPressed: signOut,
 //             icon: const Icon(Icons.login),
-//           )
+//           ),
+
+          
 //         ],
 //       ),
-
-
     
-//       body:_buildUserList(),
+//       body:_buildUserList()
 
 //     );
 //   }
+
+
 
 //   // build a list of users except for the current logged in user
 //  Widget _buildUserList() {

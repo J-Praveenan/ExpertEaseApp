@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
+import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../../Pages/tutor_home.dart';
+import '../../Pages/vdo.dart';
 import '../../Pages/learner_home.dart';
 
 class AuthService extends ChangeNotifier {
@@ -19,6 +24,11 @@ class AuthService extends ChangeNotifier {
       return null;
     }
   }
+
+
+  // get current user ------------------------------------------------------------------------------
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;}
   // sign user in
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password,BuildContext context,void Function(BuildContext, Widget) navigate) async {
@@ -41,9 +51,9 @@ class AuthService extends ChangeNotifier {
 
       // Navigate based on user role
         if (userRole == 'Tutor') {
-        navigate(context, TutorHome());
+        navigate(context, tutScreen());
       } else if (userRole == 'Learner') {
-        navigate(context, LearnerHome());
+        navigate(context, LearnerHomeScreen());
       }
     
 
@@ -88,5 +98,45 @@ class AuthService extends ChangeNotifier {
   // sign user out
   Future<void> signOut() async {
     return await FirebaseAuth.instance.signOut();
+  }
+
+  // create a new userProgile
+  Future<void> createNewUserProfile(String name, String address, String bio,
+      String subject, String medium, Uint8List? image) async {
+    try {
+      User? user = getCurrentUser();
+
+      if (user != null) {
+        // Upload the image to Firebase Storage
+        String imageFileName =
+            'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('profile_images')
+            .child(imageFileName);
+        UploadTask uploadTask = storageReference.putData(image!);
+        await uploadTask.whenComplete(() async {
+          // Get the URL of the uploaded image
+          String imageUrl = await storageReference.getDownloadURL();
+
+          // Create a new document for the user in the userNewProfile collection
+          await _fireStore.collection('userNewProfile').doc(user.uid).set({
+            'uid': user.uid,
+            'name': name,
+            'address': address,
+            'bio': bio,
+            'subject': subject,
+            'medium': medium,
+            'profileImage':
+                imageUrl, // Store the image URL in the Firestore database
+          });
+        });
+      } else {
+        throw Exception("User not found");
+      }
+    } catch (e) {
+      print('Error creating user profile: $e');
+      throw Exception("Failed to create user profile");
+    }
   }
 }

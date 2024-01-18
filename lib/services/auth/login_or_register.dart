@@ -18,14 +18,29 @@ class _LoginOrRegisterState extends State<LoginOrRegister> {
     setState(() {
       showLoginPage = !showLoginPage;
     });
+  
+
+ 
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     if (showLoginPage) {
-      return LoginPage(onTap: togglePages);
+      return LoginPage(
+        onTap: () {
+          togglePages();
+          // If you need to perform additional actions when tapping "Register now"
+          // you can add them here.
+        },
+      );
     } else {
-      return RegisterPage(onTap: togglePages);
+      return RegisterPage(
+        onTap: () {
+          togglePages();
+          // If you need to perform additional actions when tapping "Login now"
+          // you can add them here.
+        },
+      );
     }
   }
 }

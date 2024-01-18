@@ -7,7 +7,7 @@ class IntroPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100], 
+      backgroundColor: Color.fromARGB(255, 146, 136, 233),
        body: Center(
         
         child: Column(
