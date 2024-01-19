@@ -4,6 +4,7 @@ import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
 import 'package:expert_ease/Pages/tutor_vdo.dart';
+import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,12 +20,29 @@ class _tutScreenState extends State<tutScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    user = _auth.currentUser;
+    // Retrieve the user's name from the 'userNewProfile' collection
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          userName = snapshot.data()?['name'];
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    User? user = _auth.currentUser;
-    var size = MediaQuery.of(context)
-        .size; //this gonna give us total height and with of our device
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavBar(),
       body: Stack(
@@ -34,10 +52,10 @@ class _tutScreenState extends State<tutScreen> {
             height: size.height * .45,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 199, 184, 245),
-            //    image: DecorationImage(
-            //     alignment: Alignment.centerLeft,
-            //     image: SvgPicture.asset("assets/icons/meditation_bg.svg"),
-            //  ),
+              //    image: DecorationImage(
+              //     alignment: Alignment.centerLeft,
+              //     image: SvgPicture.asset("assets/icons/meditation_bg.svg"),
+              //  ),
             ),
           ),
           SafeArea(
@@ -55,7 +73,7 @@ class _tutScreenState extends State<tutScreen> {
                     ),
                   ),
                   Text(
-                    "Hello ${user?.email ?? 'User'}",
+                    "Hello ${userName ?? user?.email}",
                     style: Theme.of(context)
                         .textTheme
                         .displaySmall
@@ -72,7 +90,14 @@ class _tutScreenState extends State<tutScreen> {
                         CategoryCard(
                           title: "Video Upload",
                           svgSrc: "assets/icons/video_upload.svg",
-                          press: () {},
+                          press: () {
+                           Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return VideoUploadingPage();
+                              }),
+                            );
+                          },
                         ),
                         CategoryCard(
                           title: "View Videos",
@@ -275,7 +300,6 @@ class BottomNavItem extends StatelessWidget {
         // Check if press is not null before invoking it
         if (press != null) {
           press!();
-          
         }
       },
       child: Column(

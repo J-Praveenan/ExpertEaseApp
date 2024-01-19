@@ -1,7 +1,7 @@
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
-import 'package:expert_ease/Pages/vdo.dart';
+import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

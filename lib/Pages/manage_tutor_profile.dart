@@ -96,7 +96,7 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(children: [
+        body: ListView(children: [
           Positioned(top: 30, child: _buildTop()),
           Positioned(bottom: 0, child: _buildBottom()),
         ]),

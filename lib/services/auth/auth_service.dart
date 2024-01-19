@@ -6,7 +6,7 @@ import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../../Pages/vdo.dart';
+import '../../Pages/video_upload.dart';
 import '../../Pages/learner_home.dart';
 
 class AuthService extends ChangeNotifier {

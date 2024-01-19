@@ -1,12 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class TutorDetails extends StatelessWidget {
+class TutorDetails extends StatefulWidget {
 
+ 
   final Map<String, dynamic> tutorData;
-    TutorDetails({required this.tutorData});
+  TutorDetails({required this.tutorData});
+
+  @override
+  State<TutorDetails> createState() => _TutorDetailsState();
+}
+
+class _TutorDetailsState extends State<TutorDetails> {
   List imgs = [
     "tutor1.jpeg",
     "tutor2.jpeg",
@@ -16,6 +25,7 @@ class TutorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       backgroundColor: Color(0xFF7165D6),
       body: SingleChildScrollView(
@@ -60,7 +70,7 @@ class TutorDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            "${tutorData['email']}",
+                            "${widget.tutorData['name']}",
                             style: TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.w500,
@@ -69,7 +79,7 @@ class TutorDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            "ICT",
+                            "${widget.tutorData['subject']}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -85,23 +95,22 @@ class TutorDetails extends StatelessWidget {
                                   color: Color(0xFF9F97E2),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF9F97E2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  CupertinoIcons.chat_bubble_text_fill,
-                                  color: Colors.white,
-                                  size: 25,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                                  receiverUserEmail:
+                                                      widget.tutorData['email'],
+                                                  receiverUserID:widget.tutorData['uid'],
+                                                )));
+                                  },
+                                  child: Icon(
+                                    CupertinoIcons.chat_bubble_text_fill,
+                                    color: Colors.white,
+                                    size: 25,
+                                  ),
                                 ),
                               ),
                             ],
@@ -139,7 +148,7 @@ class TutorDetails extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "With over a decade of experience, Dr. Johnson specializes in making complex mathematical concepts accessible and engaging for students of all levels. Her areas of expertise include algebra, calculus, and advanced mathematical applications.",
+                    "${widget.tutorData['bio']}",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black54,
@@ -285,7 +294,7 @@ class TutorDetails extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      "Poonthoddam,Vavuniya",
+                      "${widget.tutorData['address']}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -315,22 +324,7 @@ class TutorDetails extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Consultaion Price",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
-                ),
-                Text(
-                  "\$100",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+             
             ),
             SizedBox(height: 15),
             InkWell(

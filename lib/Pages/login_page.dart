@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(children: [
+        body: ListView(children: [
           Positioned(top: 80, child: _buildTop()),
           Positioned(bottom: 0, child: _buildBottom()),
         ]),
@@ -132,6 +132,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+  Widget _buildForRemText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+          color: Color.fromARGB(255, 107, 106, 106), fontSize: 13),
+    );
+  }
+
   Widget _buildInputEmail(TextEditingController controller,
       {isPassword = false}) {
     return TextField(
@@ -162,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildRememberForgot() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+     mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
@@ -173,11 +182,14 @@ class _LoginPageState extends State<LoginPage> {
                     rememberUser = value!;
                   });
                 }),
-            _buildGreyText("Remember me"),
+            _buildForRemText("Remember me"),
           ],
         ),
-        TextButton(
-            onPressed: () {}, child: _buildGreyText("forgot password"))
+        Padding(
+          padding: EdgeInsets.only(left: 0),
+          child: TextButton(
+              onPressed: () {}, child: _buildForRemText("forgot password")),
+        )
       ],
     );
   }

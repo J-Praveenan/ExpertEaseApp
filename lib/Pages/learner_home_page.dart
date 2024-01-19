@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:expert_ease/Pages/chat_page.dart';
-import 'package:expert_ease/Pages/video_uploading_page.dart';
+import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:flutter/material.dart';
 

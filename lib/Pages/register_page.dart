@@ -85,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(children: [
+        body: ListView(children: [
           Positioned(top: 70, child: _buildTop()),
           Positioned(bottom: 0, child: _buildBottom()),
         ]),
@@ -139,19 +139,7 @@ class _RegisterPageState extends State<RegisterPage> {
               fontWeight: FontWeight.w500),
         ),
         _buildGreyText("Please register with your information"),
-        const SizedBox(height: 40),
-        _buildGreyText("Email"),
-        _buildInputFieldEmail(emailController),
         const SizedBox(height: 20),
-        _buildGreyText("Password"),
-        _buildInputFieldPassword(passwordController),
-        const SizedBox(height: 20),
-        _buildGreyText("Confirm Password"),
-        _buildInputFieldPassword(confirmPasswordController),
-        const SizedBox(height: 20),
-        // _buildGreyText("Select your role"),
-        // _buildInputFieldRole(roleController),
-
         StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection('roles').snapshots(),
             builder: (context, snapshot) {
@@ -166,8 +154,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Text(
                       'Select your Role',
                       style: TextStyle(
-                        color: Color.fromARGB(255, 107, 106, 106), // Replace with your desired color
-                        // Optional: italicize the text
+                        color: Color.fromARGB(255, 107, 106, 106),
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -198,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   underline: Container(), // Remove the default underline
                   icon: Padding(
                     padding: EdgeInsets.only(
-                        left: 188), // Adjust the padding as needed
+                        left: 130), // Adjust the padding as needed
                     child: Icon(
                       Icons.arrow_drop_down_circle,
                       color: Color(0xFF7165D6),
@@ -211,6 +199,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               );
             }),
+               const SizedBox(height: 20),
+        _buildGreyText("Email"),
+        _buildInputFieldEmail(emailController),
+        const SizedBox(height: 20),
+        _buildGreyText("Password"),
+        _buildInputFieldPassword(passwordController),
+        const SizedBox(height: 20),
+        _buildGreyText("Confirm Password"),
+        _buildInputFieldPassword(confirmPasswordController),
+        const SizedBox(height: 20),
+        // _buildGreyText("Select your role"),
+        // _buildInputFieldRole(roleController),
+
+        
         const SizedBox(height: 20),
         MyButton(onTap: signUp, text: "Register"),
         const SizedBox(height: 20),
