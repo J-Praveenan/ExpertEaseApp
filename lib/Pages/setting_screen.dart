@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/login_page.dart';
 import 'package:expert_ease/Pages/manage_tutor_profile.dart';
+import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,8 +78,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => UpdateUserProfile(onTap: () {  },)),
-                  );
+                        builder: (context) => tutScreen(),));
+                  
                 },
                 leading: Container(
                   padding: EdgeInsets.all(10),
@@ -86,8 +88,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    CupertinoIcons.person,
+                    CupertinoIcons.home,
                     color: Colors.blue,
+                    size: 35,
+                  ),
+                ),
+                title: Text(
+                  "Home",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                  ),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios_rounded),
+              ),
+              SizedBox(height: 20),
+              ListTile(
+                onTap: () {
+                      //manage account function call
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateUserProfile(onTap: () {  },)),
+                  );
+                },
+                leading: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade100,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                   CupertinoIcons.person,
+                    color: Colors.deepPurple,
                     size: 35,
                   ),
                 ),
@@ -101,56 +135,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trailing: Icon(Icons.arrow_forward_ios_rounded),
               ),
               SizedBox(height: 20),
+              // ListTile(
+              //   onTap: () {
+                  
+              //   },
+              //   leading: Container(
+              //     padding: EdgeInsets.all(10),
+              //     decoration: BoxDecoration(
+              //       color: Colors.indigo.shade100,
+              //       shape: BoxShape.circle,
+              //     ),
+              //     child: Icon(
+              //       Icons.privacy_tip_outlined,
+              //       color: Colors.indigo,
+              //       size: 35,
+              //     ),
+              //   ),
+              //   title: Text(
+              //     "Privacy",
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.w500,
+              //       fontSize: 20,
+              //     ),
+              //   ),
+              //   trailing: Icon(Icons.arrow_forward_ios_rounded),
+              // ),
+              // SizedBox(height: 20),
               ListTile(
-                onTap: () {},
-                leading: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple.shade100,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.notifications_none_outlined,
-                    color: Colors.deepPurple,
-                    size: 35,
-                  ),
-                ),
-                title: Text(
-                  "Notifications",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-                ),
-                trailing: Icon(Icons.arrow_forward_ios_rounded),
-              ),
-              SizedBox(height: 20),
-              ListTile(
-                onTap: () {},
-                leading: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.shade100,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.privacy_tip_outlined,
-                    color: Colors.indigo,
-                    size: 35,
-                  ),
-                ),
-                title: Text(
-                  "Privacy",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-                ),
-                trailing: Icon(Icons.arrow_forward_ios_rounded),
-              ),
-              SizedBox(height: 20),
-              ListTile(
-                onTap: () {},
+                onTap: () {
+                  
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MessageScreen(),)
+                  );
+                },
                 leading: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -158,13 +177,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.settings_suggest_outlined,
+                    Icons.chat_bubble_outline_outlined,
                     color: Colors.green,
                     size: 35,
                   ),
                 ),
                 title: Text(
-                  "General",
+                  "Messages",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 20,

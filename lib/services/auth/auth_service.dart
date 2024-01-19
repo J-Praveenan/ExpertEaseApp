@@ -101,8 +101,8 @@ class AuthService extends ChangeNotifier {
   }
 
   // create a new userProgile
-  Future<void> createNewUserProfile(String name, String address, String bio,
-      String subject, String medium, Uint8List? image) async {
+  Future<void> createNewUserProfile(String name, String address,
+      String subject, String medium, String bio,Uint8List? image) async {
     try {
       User? user = getCurrentUser();
 
@@ -124,9 +124,9 @@ class AuthService extends ChangeNotifier {
             'uid': user.uid,
             'name': name,
             'address': address,
-            'bio': bio,
             'subject': subject,
             'medium': medium,
+             'bio': bio,
             'profileImage':
                 imageUrl, // Store the image URL in the Firestore database
           });

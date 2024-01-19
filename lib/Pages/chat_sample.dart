@@ -24,7 +24,7 @@ class ChatSample extends StatelessWidget {
                 padding: isCurrentUser? EdgeInsets.only(left: 20,top: 10,bottom: 25,right: 20):EdgeInsets.all(20),
                 decoration:isCurrentUser? BoxDecoration( 
                   color: Color(0xFF7165D6)):BoxDecoration( 
-              color: Color(0xFFE1E1E2),
+              color: Color(0xFFFFFFFFF),
             ),
                 
                 child: Text( 

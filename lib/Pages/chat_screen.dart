@@ -36,6 +36,7 @@ void sendMessage() async {
 @override
   Widget build(BuildContext context) {
     return Scaffold(
+       backgroundColor: Color(0xFFEDEBFF),
      appBar: PreferredSize( 
         preferredSize: Size.fromHeight(70),
         child: AppBar( 

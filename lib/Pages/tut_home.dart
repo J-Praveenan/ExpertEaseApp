@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/constants.dart';
+import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
 import 'package:expert_ease/Pages/tutor_vdo.dart';
-import 'package:expert_ease/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,11 +33,11 @@ class _tutScreenState extends State<tutScreen> {
             // Here the height of the container is 45% of our total height
             height: size.height * .45,
             decoration: BoxDecoration(
-              color: Color(0xFFF5CEB8),
-              image: DecorationImage(
-                alignment: Alignment.centerLeft,
-                image: AssetImage("assets/images/undraw_pilates_gpdb.png"),
-              ),
+              color: Color.fromARGB(255, 199, 184, 245),
+            //    image: DecorationImage(
+            //     alignment: Alignment.centerLeft,
+            //     image: SvgPicture.asset("assets/icons/meditation_bg.svg"),
+            //  ),
             ),
           ),
           SafeArea(
@@ -51,11 +52,6 @@ class _tutScreenState extends State<tutScreen> {
                       alignment: Alignment.center,
                       height: 52,
                       width: 52,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF2BEA1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset("assets/icons/menu.svg"),
                     ),
                   ),
                   Text(
@@ -74,13 +70,13 @@ class _tutScreenState extends State<tutScreen> {
                       mainAxisSpacing: 20,
                       children: <Widget>[
                         CategoryCard(
-                          title: "Diet Recommendation",
-                          svgSrc: "assets/icons/Hamburger.svg",
+                          title: "Video Upload",
+                          svgSrc: "assets/icons/video_upload.svg",
                           press: () {},
                         ),
                         CategoryCard(
-                          title: "Videos",
-                          svgSrc: "assets/icons/Excrecises.svg",
+                          title: "View Videos",
+                          svgSrc: "assets/icons/view_video.svg",
                           press: () {
                             Navigator.push(
                               context,
@@ -92,7 +88,7 @@ class _tutScreenState extends State<tutScreen> {
                         ),
                         CategoryCard(
                           title: "About You",
-                          svgSrc: "assets/icons/Meditation.svg",
+                          svgSrc: "assets/icons/about_you.svg",
                           press: () {
                             Navigator.push(
                               context,
@@ -109,8 +105,8 @@ class _tutScreenState extends State<tutScreen> {
                           },
                         ),
                         CategoryCard(
-                          title: "Yoga",
-                          svgSrc: "assets/icons/yoga.svg",
+                          title: "Profile",
+                          svgSrc: "assets/icons/profile.svg",
                           press: () {},
                         ),
                       ],
@@ -223,17 +219,24 @@ class BottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           BottomNavItem(
-            title: "Today",
-            svgScr: "assets/icons/calendar.svg",
+            title: "Chat",
+            svgScr: "assets/icons/chat.svg",
+            press: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MessageScreen(),
+                  ));
+            },
           ),
           BottomNavItem(
-            title: "All Exercises",
-            svgScr: "assets/icons/gym.svg",
+            title: "Home",
+            svgScr: "assets/icons/home.svg",
             isActive: true,
           ),
           BottomNavItem(
-              title: "Settings",
-              svgScr: "assets/icons/Settings.svg",
+              title: "Setting",
+              svgScr: "assets/icons/setting.svg",
               press: () {
                 Navigator.push(
                   context,
@@ -272,6 +275,7 @@ class BottomNavItem extends StatelessWidget {
         // Check if press is not null before invoking it
         if (press != null) {
           press!();
+          
         }
       },
       child: Column(

@@ -35,7 +35,9 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFEDEBFF),
         body: Column(
+          
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 60),
