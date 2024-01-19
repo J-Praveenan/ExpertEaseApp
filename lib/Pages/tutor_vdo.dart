@@ -1,5 +1,6 @@
+import 'package:expert_ease/Pages/constants.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
-import 'package:expert_ease/constants.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -19,7 +20,7 @@ class TutVdo extends StatelessWidget {
             decoration: BoxDecoration(
               color: kBlueLightColor,
               image: DecorationImage(
-                image: AssetImage("assets/images/meditation_bg.png"),
+                image: AssetImage("assets/images/vdo_bg.jpg"),
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -88,56 +89,7 @@ class TutVdo extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
-                      "Meditation",
-                      style: Theme.of(context)
-                          .textTheme
-                        .headline6!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 20),
-                      padding: EdgeInsets.all(10),
-                      height: 90,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(13),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 17),
-                            blurRadius: 23,
-                            spreadRadius: -13,
-                            color: kShadowColor,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            "assets/icons/Meditation_women_small.svg",
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Basic 2",
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                                Text("Start your deepen you practice")
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SvgPicture.asset("assets/icons/Lock.svg"),
-                          ),
-                        ],
-                      ),
-                    )
+
                   ],
                 ),
               ),
