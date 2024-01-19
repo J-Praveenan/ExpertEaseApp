@@ -100,11 +100,8 @@ class _TutorDetailsState extends State<TutorDetails> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatScreen(
-                                                  receiverUserEmail:
-                                                      widget.tutorData['email'],
-                                                  receiverUserID:widget.tutorData['uid'],
-                                                )));
+                                            builder: (context) => ChatScreen(receiverUserEmail: widget.tutorData['name'],
+                receiverUserID:widget.tutorData['uid'],)));
                                   },
                                   child: Icon(
                                     CupertinoIcons.chat_bubble_text_fill,

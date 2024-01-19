@@ -18,7 +18,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    _userStream = FirebaseFirestore.instance.collection('users').snapshots();
+    _userStream = FirebaseFirestore.instance.collection('userNewProfile').snapshots();
   }
 
   List imgs = [
@@ -57,7 +57,7 @@ class _MessageScreenState extends State<MessageScreen> {
             controller: _searchController,
             onChanged: _onSearchChanged,
             decoration: InputDecoration(
-              labelText: 'Search by Email',
+              labelText: 'Search by Name',
               prefixIcon: Icon(Icons.search, color: Colors.grey),
               filled: true,
               fillColor: Colors.white,
@@ -75,21 +75,37 @@ class _MessageScreenState extends State<MessageScreen> {
       ],
     ));
   }
+// 
+//   void _onSearchChanged(String query) {
+//     setState(() {
+//       if (query.isEmpty) {
+//         _userStream =
+//             FirebaseFirestore.instance.collection('userNewProfile').snapshots();
+//       } else {
+//         _userStream = FirebaseFirestore.instance
+//             .collection('userNewProfile')
+//             .where('name', isGreaterThanOrEqualTo: query)
+//             .where('name', isLessThan: query + 'z')
+//             .snapshots();
+//       }
+//     });
+//   }
 
-  void _onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        _userStream =
-            FirebaseFirestore.instance.collection('users').snapshots();
-      } else {
-        _userStream = FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isGreaterThanOrEqualTo: query)
-            .where('email', isLessThan: query + 'z')
-            .snapshots();
-      }
-    });
-  }
+void _onSearchChanged(String query) {
+  setState(() {
+    if (query.isEmpty) {
+      _userStream =
+          FirebaseFirestore.instance.collection('userNewProfile').snapshots();
+    } else {
+      _userStream = FirebaseFirestore.instance
+          .collection('userNewProfile')
+          .where('name', isGreaterThanOrEqualTo: query.toLowerCase())
+          .where('name', isLessThan: query.toLowerCase() + 'z')
+          .snapshots();
+    }
+  });
+}
+
 
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
@@ -115,11 +131,11 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildUserListItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
-    if (_auth.currentUser!.email != data['email']) {
+    if (_auth.currentUser!.email != data['name']) {
       return ListTile(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatScreen(receiverUserEmail: data['email'],
+              context, MaterialPageRoute(builder: (context) => ChatScreen(receiverUserEmail: data['name'],
                 receiverUserID:data['uid'],)));
         },
         leading: CircleAvatar(
@@ -128,7 +144,7 @@ class _MessageScreenState extends State<MessageScreen> {
               'https://png.pngitem.com/pimgs/s/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
         ),
         title: Text(
-          data['email'],
+          data['name'],
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

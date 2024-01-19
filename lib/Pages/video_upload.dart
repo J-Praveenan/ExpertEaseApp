@@ -115,20 +115,22 @@ class _VideoUploadingPageState extends State<VideoUploadingPage> {
 
   Widget _videoPreviewWidget() {
     if (_controller != null) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AspectRatio(
-            aspectRatio: _controller!.value.aspectRatio,
-            child: VideoPlayer(_controller!),
-          ),
-
-          const SizedBox(
-            height: 10,
-          ),
-          MyButton(onTap: _uploadVideo, text: 'Upload')
-          // ElevatedButton(onPressed: _uploadVideo, child: const Text('Upload')),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: _controller!.value.aspectRatio,
+              child: VideoPlayer(_controller!),
+            ),
+        
+            const SizedBox(
+              height: 10,
+            ),
+            MyButton(onTap: _uploadVideo, text: 'Upload')
+            // ElevatedButton(onPressed: _uploadVideo, child: const Text('Upload')),
+          ],
+        ),
       );
     } else {
       return const CircularProgressIndicator();

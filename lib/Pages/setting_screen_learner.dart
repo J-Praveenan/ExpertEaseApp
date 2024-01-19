@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/login_page.dart';
-import 'package:expert_ease/Pages/manage_tutor_profile.dart';
+import 'package:expert_ease/Pages/manage_learner_profile%20.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
@@ -10,12 +11,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SettingsScreen extends StatefulWidget {
+class LearnerSettingsScreen extends StatefulWidget {
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<LearnerSettingsScreen> createState() => _LearnerSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
@@ -96,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LearnerHomePage(),
+                        builder: (context) => LearnerHomeScreen(),
                       ));
                 },
                 leading: Container(
@@ -128,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => UpdateUserProfile(
+                        builder: (context) => UpdateLearnerProfile(
                               onTap: () {},
                             )),
                   );

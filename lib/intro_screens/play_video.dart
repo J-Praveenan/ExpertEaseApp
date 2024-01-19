@@ -37,25 +37,27 @@ class _PlayVideoState extends State<PlayVideo> {
       appBar: AppBar(
         title: const Text('Play Video'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlickVideoPlayer(
-              flickManager: flickManager,
-              flickVideoWithControls: const FlickVideoWithControls(
-                controls: FlickPortraitControls(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlickVideoPlayer(
+                flickManager: flickManager,
+                flickVideoWithControls: const FlickVideoWithControls(
+                  controls: FlickPortraitControls(),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(widget.videoName),
-            const SizedBox(
-              height: 10,
-            ),
-            Text('Tutor Name : '+widget.tutorName),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              Text(widget.videoName),
+              const SizedBox(
+                height: 10,
+              ),
+              Text('Tutor Name : '+widget.tutorName),
+            ],
+          ),
         ),
       ),
     );

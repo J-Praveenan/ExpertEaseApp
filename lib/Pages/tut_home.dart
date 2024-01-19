@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/constants.dart';
+import 'package:expert_ease/Pages/manage_tutor_profile.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
 import 'package:expert_ease/Pages/tutor_vdo.dart';
 import 'package:expert_ease/Pages/video_upload.dart';
+import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -21,6 +23,7 @@ class _tutScreenState extends State<tutScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
+  Map<String, dynamic>? tutorData;
 
   @override
   void initState() {
@@ -76,7 +79,7 @@ class _tutScreenState extends State<tutScreen> {
                     "Hello ${userName ?? user?.email}",
                     style: Theme.of(context)
                         .textTheme
-                        .displaySmall
+                        .titleLarge
                         ?.copyWith(fontWeight: FontWeight.w900),
                   ),
                   SearchBar(),
@@ -91,7 +94,7 @@ class _tutScreenState extends State<tutScreen> {
                           title: "Video Upload",
                           svgSrc: "assets/icons/video_upload.svg",
                           press: () {
-                           Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
                                 return VideoUploadingPage();
@@ -106,7 +109,7 @@ class _tutScreenState extends State<tutScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return TutVdo();
+                                return VideoList();
                               }),
                             );
                           },
@@ -115,24 +118,27 @@ class _tutScreenState extends State<tutScreen> {
                           title: "About You",
                           svgSrc: "assets/icons/about_you.svg",
                           press: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  // Pass the current user's data to TutorDetails
-                                  return TutorDetails(tutorData: {
-                                    'email': user?.email,
-                                    // Add other user data fields as needed
-                                  });
-                                },
-                              ),
-                            );
+                            //                 Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => TutorDetails(tutorData: tutorData),
+                            //   ),
+                            // );
                           },
+                          tutorData: tutorData,
                         ),
                         CategoryCard(
                           title: "Profile",
                           svgSrc: "assets/icons/profile.svg",
-                          press: () {},
+                          press: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UpdateUserProfile(
+                                        onTap: () {},
+                                      )),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -150,13 +156,15 @@ class _tutScreenState extends State<tutScreen> {
 class CategoryCard extends StatelessWidget {
   final String svgSrc;
   final String title;
-  final Function() press;
-  const CategoryCard(
-      {super.key,
-      required this.svgSrc,
-      required this.title,
-      required this.press});
+  final Function()? press; // Updated the function signature
+  final Map<String, dynamic>? tutorData; // Added tutorData parameter
 
+  const CategoryCard({
+    required this.svgSrc,
+    required this.title,
+    required this.press,
+    this.tutorData, // Updated the constructor to accept tutorData
+  });
   @override
   Widget build(BuildContext context) {
     return ClipRRect(

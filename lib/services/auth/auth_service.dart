@@ -17,7 +17,8 @@ class AuthService extends ChangeNotifier {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   Future<String?> getUserRole(String uid) async {
     try {
-      DocumentSnapshot userDoc = await _fireStore.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc =
+          await _fireStore.collection('users').doc(uid).get();
       return userDoc['role'];
     } catch (e) {
       print('Error getting user role: $e');
@@ -25,37 +26,40 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-
   // get current user ------------------------------------------------------------------------------
   User? getCurrentUser() {
-    return _firebaseAuth.currentUser;}
+    return _firebaseAuth.currentUser;
+  }
+
   // sign user in
   Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password,BuildContext context,void Function(BuildContext, Widget) navigate) async {
+      String email,
+      String password,
+      BuildContext context,
+      void Function(BuildContext, Widget) navigate) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
-
-
       // add a new document for the user in users collection if it doesn't already exists
       _fireStore.collection('users').doc(userCredential.user!.uid).set({
-       
         'uid': userCredential.user!.uid,
         'email': email,
       }, SetOptions(merge: true));
       // Check if the user has the expected role
-   
-      DocumentSnapshot userDoc = await _fireStore.collection('users').doc(userCredential.user!.uid).get();
+
+      DocumentSnapshot userDoc = await _fireStore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
       String userRole = userDoc['role'];
 
       // Navigate based on user role
-        if (userRole == 'Tutor') {
+      if (userRole == 'Tutor') {
         navigate(context, tutScreen());
       } else if (userRole == 'Learner') {
         navigate(context, LearnerHomeScreen());
       }
-    
 
       return userCredential;
     }
@@ -63,18 +67,15 @@ class AuthService extends ChangeNotifier {
     on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
-
-   
   }
 
   // create a new user
   Future<UserCredential> signUpWithEmailAndPassword(
       String role, String email, String password) async {
     try {
-       print('Role: $role, Email: $email, Password: $password');
+      print('Role: $role, Email: $email, Password: $password');
       UserCredential userCredential =
           await _firebaseAuth.createUserWithEmailAndPassword(
-      
         email: email,
         password: password,
       );
@@ -86,11 +87,9 @@ class AuthService extends ChangeNotifier {
         'email': email,
       });
 
-
-
       return userCredential;
     } on FirebaseAuthException catch (e) {
-       print('Firebase Auth Exception: ${e.code}');
+      print('Firebase Auth Exception: ${e.code}');
       throw Exception(e.code);
     }
   }
@@ -101,8 +100,8 @@ class AuthService extends ChangeNotifier {
   }
 
   // create a new userProgile
-  Future<void> createNewUserProfile(String name, String address,
-      String subject, String medium, String bio,Uint8List? image) async {
+  Future<void> createNewUserProfile(String name, String address, String subject,
+      String medium, String bio, Uint8List? image) async {
     try {
       User? user = getCurrentUser();
 
@@ -126,7 +125,45 @@ class AuthService extends ChangeNotifier {
             'address': address,
             'subject': subject,
             'medium': medium,
-             'bio': bio,
+            'bio': bio,
+            'profileImage':
+                imageUrl, // Store the image URL in the Firestore database
+          });
+        });
+      } else {
+        throw Exception("User not found");
+      }
+    } catch (e) {
+      print('Error creating user profile: $e');
+      throw Exception("Failed to create user profile");
+    }
+  }
+
+  Future<void> createNewLearnerProfile(String name, String address,
+      String mobileNo,Uint8List? image) async {
+    try {
+      User? user = getCurrentUser();
+
+      if (user != null) {
+        // Upload the image to Firebase Storage
+        String imageFileName =
+            'learner_Rprofile_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('learner_profile_images')
+            .child(imageFileName);
+        UploadTask uploadTask = storageReference.putData(image!);
+        await uploadTask.whenComplete(() async {
+          // Get the URL of the uploaded image
+          String imageUrl = await storageReference.getDownloadURL();
+
+          // Create a new document for the user in the userNewProfile collection
+          await _fireStore.collection('userLearnerProfile').doc(user.uid).set({
+            'uid': user.uid,
+            'name': name,
+            'address': address,
+            'mobile': mobileNo,
+          
             'profileImage':
                 imageUrl, // Store the image URL in the Firestore database
           });
