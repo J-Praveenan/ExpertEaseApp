@@ -1,10 +1,8 @@
 import 'package:expert_ease/Pages/constants.dart';
-import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/manage_tutor_profile.dart';
 import 'package:expert_ease/Pages/onBoardingScreen.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
-import 'package:expert_ease/Pages/tutor_register_page.dart';
 import 'package:expert_ease/firebase_options.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:expert_ease/services/auth/auth_gate.dart';

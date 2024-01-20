@@ -16,12 +16,85 @@ class TutorDetails extends StatefulWidget {
 }
 
 class _TutorDetailsState extends State<TutorDetails> {
+final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User? user;
+  List<Map<String, dynamic>> tutors = [];
+    String? userName;
+
+     @override
+  void initState() {
+    super.initState();
+    user = _auth.currentUser;
+    // Retrieve the user's name from the 'userNewProfile' collection
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          userName = snapshot.data()?['name'];
+           loadTutors();
+        });
+      }
+    });
+  }
+
+
+Future<void> loadTutors() async {
+  final QuerySnapshot tutorSnapshot = await _firestore
+      .collection('users')
+      .where('role', isEqualTo: 'Tutor')
+      .get();
+
+  for (final doc in tutorSnapshot.docs) {
+    final Map<String, dynamic>? docData = doc.data() as Map<String, dynamic>?;
+
+    if (docData != null) {
+      final tutorUID = docData['uid'];
+
+      if (tutorUID != null) {
+        final tutorSubjectSnapshot =
+            await _firestore.collection('userNewProfile').doc(tutorUID).get();
+
+        final Map<String, dynamic>? tutorSubjectData =
+            tutorSubjectSnapshot.data() as Map<String, dynamic>?;
+
+      if (tutorSubjectData != null) {
+          final tutorName = tutorSubjectData['name'];
+          final tutorSubject = tutorSubjectData['subject'];
+          final tutorBio = tutorSubjectData['bio'];
+          final tutorLocation = tutorSubjectData['address'];
+         
+
+          // Do something with tutorEmail and tutorSubject
+          print('Tutor Name: $tutorName, Tutor Subject: $tutorSubject');
+
+          setState(() {
+            tutors.add({
+              'name': tutorName,
+              'subject': tutorSubject,
+              'bio':tutorBio,
+              'address':tutorLocation,
+              'uid':tutorUID,
+            });
+          });
+        }
+      }
+    }
+  }
+}
+
+
   List imgs = [
     "tutor1.jpeg",
     "tutor2.jpeg",
     "tutor3.jpeg",
     "tutor4.jpeg",
   ];
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -201,8 +274,9 @@ class _TutorDetailsState extends State<TutorDetails> {
                     height: 160,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 4,
+                      itemCount: tutors.length,
                       itemBuilder: (context, Index) {
+                         Map<String, dynamic> tutorData = tutors[Index];
                         return Container(
                           margin: EdgeInsets.all(10),
                           padding: EdgeInsets.symmetric(vertical: 5),
@@ -228,7 +302,7 @@ class _TutorDetailsState extends State<TutorDetails> {
                                         AssetImage("images/${imgs[Index]}"),
                                   ),
                                   title: Text(
-                                    "Ms. Tutor Name",
+                                   "${tutorData['name']}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),

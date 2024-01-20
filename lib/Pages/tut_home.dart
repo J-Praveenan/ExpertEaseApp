@@ -18,12 +18,12 @@ class tutScreen extends StatefulWidget {
 
 class _tutScreenState extends State<tutScreen> {
   int _selectedIndex = 0;
+  Map<String, dynamic>? tutorData;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
-  Map<String, dynamic>? tutorData;
 
   @override
   void initState() {
@@ -41,24 +41,37 @@ class _tutScreenState extends State<tutScreen> {
         });
       }
     });
+
+    // Fetch tutor data and update the class-level tutorData
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          tutorData = snapshot.data();
+        });
+      }
+    });
   }
 
+  
   @override
   Widget build(BuildContext context) {
+    User? user = _auth.currentUser;
+   
     var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavBar(),
       body: Stack(
         children: <Widget>[
           Container(
-            // Here the height of the container is 45% of our total height
+           
             height: size.height * .45,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 199, 184, 245),
-              //    image: DecorationImage(
-              //     alignment: Alignment.centerLeft,
-              //     image: SvgPicture.asset("assets/icons/meditation_bg.svg"),
-              //  ),
+            
             ),
           ),
           SafeArea(
@@ -115,18 +128,17 @@ class _tutScreenState extends State<tutScreen> {
                           },
                         ),
                         CategoryCard(
-                          title: "About You",
-                          svgSrc: "assets/icons/about_you.svg",
-                          press: () {
-                            //                 Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => TutorDetails(tutorData: tutorData),
-                            //   ),
-                            // );
-                          },
-                          tutorData: tutorData,
-                        ),
+                            title: "About You",
+                            svgSrc: "assets/icons/about_you.svg",
+                            press: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TutorDetails(tutorData: tutorData ?? {}),
+                                ),
+                              );
+                            }),
                         CategoryCard(
                           title: "Profile",
                           svgSrc: "assets/icons/profile.svg",

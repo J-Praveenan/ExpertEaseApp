@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
-import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/login_page.dart';
 import 'package:expert_ease/Pages/manage_learner_profile%20.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';

@@ -1,4 +1,3 @@
-import 'package:expert_ease/Pages/learner_home_page.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
