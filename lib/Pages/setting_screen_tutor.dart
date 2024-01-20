@@ -68,13 +68,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Settings",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w500,
+              Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => tutScreen()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color:  Colors.black,
+                      size: 25,
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 140),
+                    child: Text(
+                      "Settings",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
               SizedBox(height: 30),
               ListTile(
                leading: CircleAvatar(
