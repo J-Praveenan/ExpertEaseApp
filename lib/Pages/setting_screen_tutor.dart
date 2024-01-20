@@ -90,7 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(right: 140),
                     child: Text(
-                      "Settings",
+                      "Setting",
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

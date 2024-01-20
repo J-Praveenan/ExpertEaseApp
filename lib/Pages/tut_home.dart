@@ -25,6 +25,7 @@ class _tutScreenState extends State<tutScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _tutScreenState extends State<tutScreen> {
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
+          imageUrl = snapshot.data()?['profileImage'];
         });
       }
     });
@@ -57,22 +59,20 @@ class _tutScreenState extends State<tutScreen> {
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     User? user = _auth.currentUser;
-   
+
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      
       bottomNavigationBar: BottomNavBar(),
       body: Stack(
         children: <Widget>[
           Container(
-           
             height: size.height * .45,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 199, 184, 245),
-            
             ),
           ),
           SafeArea(
@@ -89,12 +89,24 @@ class _tutScreenState extends State<tutScreen> {
                       width: 52,
                     ),
                   ),
-                  Text(
-                    "Hello ${userName ?? user?.email}",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w900),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Hello ${userName ?? user?.email}",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: imageUrl != null
+                            ? NetworkImage(imageUrl!)
+                            : AssetImage("images/default_avatar.png")
+                                as ImageProvider<Object>?,
+                      ),
+                    ],
                   ),
                   SearchBar(),
                   Expanded(
@@ -135,8 +147,8 @@ class _tutScreenState extends State<tutScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TutorDetailsTutor(tutorData: tutorData ?? {}),
+                                  builder: (context) => TutorDetailsTutor(
+                                      tutorData: tutorData ?? {}),
                                 ),
                               );
                             }),

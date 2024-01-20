@@ -17,7 +17,9 @@ class AuthGate extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (snapshot.hasData) {
@@ -33,13 +35,13 @@ class AuthGate extends StatelessWidget {
                   if (roleSnapshot.hasData) {
                     String userRole = roleSnapshot.data.toString();
                     if (userRole == 'Tutor') {
-                      return  tutScreen();
+                      return tutScreen();
                     } else if (userRole == 'Learner') {
-                      return  LearnerHomeScreen();
+                      return LearnerHomeScreen();
                     }
                   }
-return const LoginOrRegister();
-                 // return const HomePage(); // Fallback to HomePage if role not determined
+                  return const LoginOrRegister();
+                  // return const HomePage(); // Fallback to HomePage if role not determined
                 },
               );
             }
