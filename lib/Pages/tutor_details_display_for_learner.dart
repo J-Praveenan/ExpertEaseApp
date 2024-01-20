@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expert_ease/Pages/chat_screen.dart';
-import 'package:expert_ease/Pages/learner_messages_screen.dart';
+import 'package:expert_ease/Pages/chat_screen_for_learners.dart';
+import 'package:expert_ease/Pages/chat_screen_for_tutors.dart';
+import 'package:expert_ease/Pages/messages_screen_for_tutors.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,7 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
   User? user;
   List<Map<String, dynamic>> tutors = [];
   String? userName;
-  String? imageUrl;
+  // String? imageUrl;
   String? imageTutorUrl;
 
   @override
@@ -37,7 +38,7 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
-          imageUrl = snapshot.data()?['profileImage'];
+          // imageUrl = snapshot.data()?['profileImage'];
           loadTutors();
         });
       }
@@ -79,7 +80,7 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
                 'subject': tutorSubject,
                 'bio': tutorBio,
                 'address': tutorLocation,
-                'profileImage': imageUrl,
+                // 'profileImage': imageUrl,
                 'uid': tutorUID,
                 'profileImage': imageTutorUrl,
               });
@@ -139,8 +140,8 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
                         children: [
                           CircleAvatar(
                             radius: 30,
-                            backgroundImage: imageUrl != null
-                                ? NetworkImage(imageUrl!)
+                            backgroundImage: "${widget.tutorData['profileImage']}" != null
+                                ? NetworkImage("${widget.tutorData['profileImage']}")
                                 : AssetImage("images/default_avatar.png")
                                     as ImageProvider<Object>?,
                           ),
@@ -176,7 +177,7 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatScreen(receiverUserEmail: widget.tutorData['name'],
+                                            builder: (context) => ChatScreenForLearner(receiverUserEmail: widget.tutorData['name'],
                 receiverUserID:widget.tutorData['uid'],)));},
                                   child: Icon(
                                     CupertinoIcons.chat_bubble_text_fill,

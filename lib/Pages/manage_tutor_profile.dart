@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/components/my_button.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:expert_ease/utils.dart';
@@ -96,6 +97,41 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: ListView(children: [
+          const SizedBox(height: 30),
+          Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => tutScreen()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      size: 25,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 30),
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           Positioned(top: 30, child: _buildTop()),
           Positioned(bottom: 0, child: _buildBottom()),
         ]),

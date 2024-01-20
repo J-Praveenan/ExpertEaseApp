@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expert_ease/Pages/chat_screen.dart';
-import 'package:expert_ease/Pages/learner_messages_screen.dart';
+import 'package:expert_ease/Pages/chat_screen_for_learners.dart';
+import 'package:expert_ease/Pages/manage_tutor_profile.dart';
+import 'package:expert_ease/Pages/messages_screen_for_tutors.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,14 +123,6 @@ class _TutorDetailsTutorState extends State<TutorDetailsTutor> {
                           size: 25,
                         ),
                       ),
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
                     ],
                   ),
                   Padding(
@@ -173,14 +166,14 @@ class _TutorDetailsTutorState extends State<TutorDetailsTutor> {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LearnerMessageScreen()));
+                                    Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateUserProfile(onTap: (){},)),
+                  );
                                   },
                                   child: Icon(
-                                    CupertinoIcons.chat_bubble_text_fill,
+                                    Icons.edit,
                                     color: Colors.white,
                                     size: 25,
                                   ),

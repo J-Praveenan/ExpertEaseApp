@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/components/my_button.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:expert_ease/utils.dart';
@@ -80,13 +81,50 @@ class _UpdateLearnerProfileState extends State<UpdateLearnerProfile> {
     myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Container(
+      
       decoration: BoxDecoration(
         color: Color(0xFF7165D6),
       ),
       child: Scaffold(
+        
         backgroundColor: Colors.transparent,
         body: ListView(children: [
-          Positioned(top: 30, child: _buildTop()),
+          const SizedBox(height: 30),
+          Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LearnerHomeScreen()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      size: 25,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 30),
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          Positioned(top: 20, child: _buildTop()),
           Positioned(top: 100, child: _buildBottom()),
         ]),
       ),
@@ -97,9 +135,9 @@ class _UpdateLearnerProfileState extends State<UpdateLearnerProfile> {
     return SizedBox(
       width: mediaSize.width,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           Stack(
             children: [
               _image != null

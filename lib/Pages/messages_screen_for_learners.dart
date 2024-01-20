@@ -1,24 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expert_ease/Pages/chat_screen.dart';
+import 'package:expert_ease/Pages/chat_screen_for_learners.dart';
+import 'package:expert_ease/Pages/chat_screen_for_tutors.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class LearnerMessageScreen extends StatefulWidget {
+class MessageScreenForLearners extends StatefulWidget {
 
   
   @override
-  State<LearnerMessageScreen> createState() => _LearnerMessageScreenState();
+  State<MessageScreenForLearners> createState() => _MessageScreenForLearnersState();
 }
 
-class _LearnerMessageScreenState extends State<LearnerMessageScreen> {
+class _MessageScreenForLearnersState extends State<MessageScreenForLearners> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _searchController = TextEditingController();
   late Stream<QuerySnapshot> _userStream;
   @override
   void initState() {
     super.initState();
-    _userStream = FirebaseFirestore.instance.collection('userLearnerProfile').snapshots();
+    _userStream = FirebaseFirestore.instance.collection('userNewProfile').snapshots();
   }
 
   List imgs = [
@@ -41,16 +43,36 @@ class _LearnerMessageScreenState extends State<LearnerMessageScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 60),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Messages",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
+        Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LearnerHomeScreen()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    "Messages",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
@@ -79,10 +101,10 @@ class _LearnerMessageScreenState extends State<LearnerMessageScreen> {
 void _onSearchChanged(String query) {
     setState(() {
       if (query.isEmpty) {
-        _userStream = FirebaseFirestore.instance.collection('userLearnerProfile').snapshots();
+        _userStream = FirebaseFirestore.instance.collection('userNewProfile').snapshots();
       } else {
         _userStream = FirebaseFirestore.instance
-            .collection('userLearnerProfile')
+            .collection('userNewProfile')
             .where('name', isGreaterThanOrEqualTo: query)
             .where('name', isLessThan: query + 'z')
             .snapshots();
@@ -119,7 +141,7 @@ void _onSearchChanged(String query) {
       return ListTile(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatScreen(receiverUserEmail: data['name'],
+              context, MaterialPageRoute(builder: (context) => ChatScreenForLearner(receiverUserEmail: data['name'],
                 receiverUserID:data['uid'],)));
         },
         // Newly add code for Image binding

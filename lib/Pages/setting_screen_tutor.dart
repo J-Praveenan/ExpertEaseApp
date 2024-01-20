@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/login_page.dart';
 import 'package:expert_ease/Pages/manage_tutor_profile.dart';
-import 'package:expert_ease/Pages/learner_messages_screen.dart';
+import 'package:expert_ease/Pages/messages_screen_for_tutors.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,13 +68,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Settings",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w500,
+              Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => tutScreen()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color:  Colors.black,
+                      size: 25,
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 140),
+                    child: Text(
+                      "Setting",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
               SizedBox(height: 30),
               ListTile(
                leading: CircleAvatar(
@@ -164,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => LearnerMessageScreen(),)
+                        builder: (context) => MessageScreenForTutors(),)
                   );
                 },
                 leading: Container(
