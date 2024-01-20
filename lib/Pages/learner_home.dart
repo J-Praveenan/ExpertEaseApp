@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expert_ease/Pages/learner_messages_screen.dart';
-import 'package:expert_ease/Pages/messages_screen%20copy.dart';
+import 'package:expert_ease/Pages/messages_screen_for_tutors.dart';
+import 'package:expert_ease/Pages/messages_screen_for_learners.dart';
 import 'package:expert_ease/Pages/setting_screen_tutor.dart';
 import 'package:expert_ease/Pages/setting_screen_learner.dart';
 import 'package:expert_ease/Pages/tutor_details_display_for_learner.dart';
@@ -306,7 +306,7 @@ Future<void> loadTutors() async {
 
 
       // Messages Screen
-      TutorMessageScreen(),
+      MessageScreenForLearners(),
 
       // Schedule Screen
       VideoList(),

@@ -5,18 +5,18 @@ import 'package:expert_ease/services/chat/chat_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreenForTutors extends StatefulWidget {
 
   final String receiverUserEmail;
   final String receiverUserID;
-  const ChatScreen({super.key,required this.receiverUserEmail,
+  const ChatScreenForTutors({super.key,required this.receiverUserEmail,
     required this.receiverUserID,});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreenForTutors> createState() => _ChatScreenForTutorsState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenForTutorsState extends State<ChatScreenForTutors> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -229,7 +229,7 @@ Widget _buildMessageInput() {
    Future<String?> _getImageUrl(String userId) async {
     try {
       final snapshot = await FirebaseFirestore.instance
-          .collection('userNewProfile')
+          .collection('userLearnerProfile')
           .doc(userId)
           .get();
       final data = snapshot.data() as Map<String, dynamic>;

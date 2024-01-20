@@ -1,6 +1,6 @@
-import 'package:expert_ease/Pages/learner_messages_screen.dart';
+import 'package:expert_ease/Pages/messages_screen_for_tutors.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
-import 'package:expert_ease/Pages/messages_screen%20copy.dart';
+import 'package:expert_ease/Pages/messages_screen_for_learners.dart';
 import 'package:expert_ease/Pages/setting_screen_tutor.dart';
 import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:expert_ease/intro_screens/view_video_list.dart';
@@ -19,7 +19,7 @@ class _NavBarRootsState extends State<NavBarRoots> {
     LearnerHomeScreen(),
 
     //Messages Screen
-    TutorMessageScreen(),
+    MessageScreenForLearners(),
 
     //Schedule Screen
     VideoList(),

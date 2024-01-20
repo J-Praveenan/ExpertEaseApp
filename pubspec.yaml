@@ -48,6 +48,7 @@ dependencies:
   custom_clippers: ^2.0.0
   flutter_svg: ^2.0.9
   flick_video_player: ^0.7.0
+  sizer: ^2.0.15
   
 dev_dependencies:
   flutter_test:
