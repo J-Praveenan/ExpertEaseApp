@@ -1,6 +1,6 @@
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
-import 'package:expert_ease/Pages/setting_screen.dart';
+import 'package:expert_ease/Pages/setting_screen_tutor.dart';
 import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:flutter/cupertino.dart';

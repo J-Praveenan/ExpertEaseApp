@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
-import 'package:expert_ease/Pages/setting_screen.dart';
+import 'package:expert_ease/Pages/setting_screen_tutor.dart';
 import 'package:expert_ease/Pages/setting_screen_learner.dart';
-import 'package:expert_ease/Pages/tutor_details_display.dart';
+import 'package:expert_ease/Pages/tutor_details_display_for_learner.dart';
 import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +23,8 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   User? user;
   List<Map<String, dynamic>> tutors = [];
   String? userName;
+   String? imageTutorUrl;
+  String? imageUrl;
 
    @override
   void initState() {
@@ -30,31 +32,21 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
     user = _auth.currentUser;
     // Retrieve the user's name from the 'userNewProfile' collection
     _firestore
-        .collection('userNewProfile')
+        .collection('userLearnerProfile')
         .doc(user?.uid)
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
+          imageUrl = snapshot.data()?['profileImage'];
            loadTutors();
         });
       }
     });
   }
 
-  // Future<void> loadTutors() async {
-  //   final QuerySnapshot tutorSnapshot = await _firestore
-  //       .collection('users')
-  //       .where('role', isEqualTo: 'Tutor')
-  //       .get();
 
-  //   setState(() {
-  //     tutors = tutorSnapshot.docs
-  //         .map((doc) => doc.data() as Map<String, dynamic>)
-  //         .toList();
-  //   });
-  // }
 
 Future<void> loadTutors() async {
   final QuerySnapshot tutorSnapshot = await _firestore
@@ -64,6 +56,7 @@ Future<void> loadTutors() async {
 
   for (final doc in tutorSnapshot.docs) {
     final Map<String, dynamic>? docData = doc.data() as Map<String, dynamic>?;
+   
 
     if (docData != null) {
       final tutorUID = docData['uid'];
@@ -80,7 +73,8 @@ Future<void> loadTutors() async {
           final tutorSubject = tutorSubjectData['subject'];
           final tutorBio = tutorSubjectData['bio'];
           final tutorLocation = tutorSubjectData['address'];
-         
+          //final tutorImage = tutorSubjectData['profileImage'];
+          imageTutorUrl = tutorSubjectSnapshot.data()?['profileImage'];
 
           // Do something with tutorEmail and tutorSubject
           print('Tutor Name: $tutorName, Tutor Subject: $tutorSubject');
@@ -92,6 +86,7 @@ Future<void> loadTutors() async {
               'bio':tutorBio,
               'address':tutorLocation,
               'uid':tutorUID,
+              'profileImage':imageTutorUrl,
             });
           });
         }
@@ -139,9 +134,11 @@ Future<void> loadTutors() async {
                     ),
                   ),
                   CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage("images/tutor1.jpeg"),
-                  ),
+                  radius: 30,
+                  backgroundImage: imageUrl != null
+                      ? NetworkImage(imageUrl!)
+                      : AssetImage("images/default_avatar.png") as ImageProvider<Object>?,
+                ),
                 ],
               ),
             ),
@@ -236,7 +233,7 @@ Future<void> loadTutors() async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TutorDetails(tutorData: tutorData),
+                        builder: (context) => TutorDetailsLearner(tutorData: tutorData),
                       ),
                     );
                   },
@@ -257,10 +254,12 @@ Future<void> loadTutors() async {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CircleAvatar(
-                          radius: 35,
-                          backgroundImage: AssetImage("images/${imgs[index]}"),
-                        ),
+                       CircleAvatar(
+                  radius: 30,
+                  backgroundImage: imageTutorUrl!= null
+                      ? NetworkImage("${tutorData['profileImage']}")
+                      : AssetImage("images/default_avatar.png") as ImageProvider<Object>?,
+                ),
                         Text(
                           "${tutorData['name']}",
                           style: TextStyle(
@@ -304,7 +303,6 @@ Future<void> loadTutors() async {
         ),
       ),
 
-      // Home Screen
 
       // Messages Screen
       MessageScreen(),

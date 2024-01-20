@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/constants.dart';
 import 'package:expert_ease/Pages/manage_tutor_profile.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
-import 'package:expert_ease/Pages/setting_screen.dart';
-import 'package:expert_ease/Pages/tutor_details_display.dart';
+import 'package:expert_ease/Pages/setting_screen_tutor.dart';
+import 'package:expert_ease/Pages/tutor_details_display%20_for_tutor.dart';
+import 'package:expert_ease/Pages/tutor_details_display_for_learner.dart';
 import 'package:expert_ease/Pages/tutor_vdo.dart';
 import 'package:expert_ease/Pages/video_upload.dart';
 import 'package:expert_ease/intro_screens/view_video_list.dart';
@@ -135,7 +136,7 @@ class _tutScreenState extends State<tutScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      TutorDetails(tutorData: tutorData ?? {}),
+                                      TutorDetailsTutor(tutorData: tutorData ?? {}),
                                 ),
                               );
                             }),

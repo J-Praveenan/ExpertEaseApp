@@ -75,21 +75,6 @@ class _MessageScreenState extends State<MessageScreen> {
       ],
     ));
   }
-// 
-//   void _onSearchChanged(String query) {
-//     setState(() {
-//       if (query.isEmpty) {
-//         _userStream =
-//             FirebaseFirestore.instance.collection('userNewProfile').snapshots();
-//       } else {
-//         _userStream = FirebaseFirestore.instance
-//             .collection('userNewProfile')
-//             .where('name', isGreaterThanOrEqualTo: query)
-//             .where('name', isLessThan: query + 'z')
-//             .snapshots();
-//       }
-//     });
-//   }
 
 void _onSearchChanged(String query) {
   setState(() {
@@ -138,11 +123,14 @@ void _onSearchChanged(String query) {
               context, MaterialPageRoute(builder: (context) => ChatScreen(receiverUserEmail: data['name'],
                 receiverUserID:data['uid'],)));
         },
+        // Newly add code for Image binding
         leading: CircleAvatar(
-          radius: 30,
-          backgroundImage: NetworkImage(
-              'https://png.pngitem.com/pimgs/s/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
-        ),
+        radius: 30,
+        backgroundImage: data['profileImage'] != null
+            ? NetworkImage(data['profileImage'])
+            : NetworkImage(
+                'https://png.pngitem.com/pimgs/s/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
+      ),
         title: Text(
           data['name'],
           style: TextStyle(

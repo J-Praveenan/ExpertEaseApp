@@ -25,7 +25,6 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
   final mediumController = TextEditingController();
   final bioController = TextEditingController();
   Uint8List? _image;
-  // String selectedRole = "0";
   bool rememberUser = false;
 
   

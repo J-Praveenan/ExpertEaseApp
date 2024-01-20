@@ -20,6 +20,7 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -27,13 +28,14 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
     user = _auth.currentUser;
     // Retrieve the user's name from the 'userNewProfile' collection
     _firestore
-        .collection('userNewProfile')
+        .collection('userLearnerProfile')
         .doc(user?.uid)
         .get()
         .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
+          imageUrl = snapshot.data()?['profileImage'];
         });
       }
     });
@@ -58,7 +60,6 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // User? user = _auth.currentUser;
     return Material(
       child: SingleChildScrollView(
         child: Padding(
@@ -77,7 +78,10 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
               ListTile(
                 leading: CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage("images/tutor1.jpeg"),
+                  backgroundImage: imageUrl != null
+                      ? NetworkImage(imageUrl!)
+                      : AssetImage("images/default_avatar.png")
+                          as ImageProvider<Object>?,
                 ),
                 title: Text(
                   "${userName ?? user?.email}",
@@ -155,10 +159,7 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
                 trailing: Icon(Icons.arrow_forward_ios_rounded),
               ),
               SizedBox(height: 20),
-              // ListTile(
-              //   onTap: () {
 
-              //   },
               //   leading: Container(
               //     padding: EdgeInsets.all(10),
               //     decoration: BoxDecoration(
