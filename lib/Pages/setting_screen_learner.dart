@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/login_page.dart';
 import 'package:expert_ease/Pages/manage_learner_profile%20.dart';
-import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/learner_messages_screen.dart';
+import 'package:expert_ease/Pages/messages_screen%20copy.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -187,7 +188,7 @@ class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MessageScreen(),
+                        builder: (context) => TutorMessageScreen(),
                       ));
                 },
                 leading: Container(

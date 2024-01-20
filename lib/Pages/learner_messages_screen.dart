@@ -4,21 +4,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class MessageScreen extends StatefulWidget {
+class LearnerMessageScreen extends StatefulWidget {
 
   
   @override
-  State<MessageScreen> createState() => _MessageScreenState();
+  State<LearnerMessageScreen> createState() => _LearnerMessageScreenState();
 }
 
-class _MessageScreenState extends State<MessageScreen> {
+class _LearnerMessageScreenState extends State<LearnerMessageScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _searchController = TextEditingController();
   late Stream<QuerySnapshot> _userStream;
   @override
   void initState() {
     super.initState();
-    _userStream = FirebaseFirestore.instance.collection('userNewProfile').snapshots();
+    _userStream = FirebaseFirestore.instance.collection('userLearnerProfile').snapshots();
   }
 
   List imgs = [
@@ -77,19 +77,18 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
 void _onSearchChanged(String query) {
-  setState(() {
-    if (query.isEmpty) {
-      _userStream =
-          FirebaseFirestore.instance.collection('userNewProfile').snapshots();
-    } else {
-      _userStream = FirebaseFirestore.instance
-          .collection('userNewProfile')
-          .where('name', isGreaterThanOrEqualTo: query.toLowerCase())
-          .where('name', isLessThan: query.toLowerCase() + 'z')
-          .snapshots();
-    }
-  });
-}
+    setState(() {
+      if (query.isEmpty) {
+        _userStream = FirebaseFirestore.instance.collection('userLearnerProfile').snapshots();
+      } else {
+        _userStream = FirebaseFirestore.instance
+            .collection('userLearnerProfile')
+            .where('name', isGreaterThanOrEqualTo: query)
+            .where('name', isLessThan: query + 'z')
+            .snapshots();
+      }
+    });
+  }
 
 
   Widget _buildUserList() {

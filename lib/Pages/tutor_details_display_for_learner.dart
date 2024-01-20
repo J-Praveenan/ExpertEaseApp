@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/chat_screen.dart';
-import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/learner_messages_screen.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -227,130 +227,7 @@ class _TutorDetailsLearnerState extends State<TutorDetailsLearner> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        "Reviews",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      Text(
-                        "4.9",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "(124)",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color(0xFF7165D6),
-                        ),
-                      ),
-                      //spacer Align next widget to the end of the row
-                      Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "See all",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Color(0xFF7165D6),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 160,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: tutors.length,
-                      itemBuilder: (context, Index) {
-                        Map<String, dynamic> tutorData = tutors[Index];
-                        return Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.4,
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: imageTutorUrl != null
-                                        ? NetworkImage(
-                                            "${tutorData['profileImage']}")
-                                        : AssetImage(
-                                                "images/default_avatar.png")
-                                            as ImageProvider<Object>?,
-                                  ),
-                                  title: Text(
-                                    "${tutorData['name']}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text("1 day ago"),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      Text(
-                                        "4.9",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text(
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    "Dr. Emily Johnson is an outstanding tutor who effortlessly simplifies complex concepts, making learning enjoyable. Her dedication, patience, and real-world examples significantly contributed to my academic success.",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+             
                   SizedBox(height: 10),
                   Text(
                     "Location",
