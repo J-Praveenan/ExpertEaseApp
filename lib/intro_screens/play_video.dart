@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayVideo extends StatefulWidget {
-  const PlayVideo({super.key, required this.videoURL, required this.videoName});
+  const PlayVideo({Key? key, required this.videoURL, required this.videoName, required this.tutorName})
+      : super(key: key);
 
   final String videoURL;
   final String videoName;
+  final String tutorName;
 
   @override
-  State<PlayVideo> createState() => _PlayVideoState();
+  _PlayVideoState createState() => _PlayVideoState();
 }
 
 class _PlayVideoState extends State<PlayVideo> {
-  late VideoPlayerController _controller;
+  late FlickManager flickManager;
 
   @override
   void dispose() {
-    _controller.dispose();
+    flickManager.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoURL),
+    flickManager = FlickManager(
+      videoPlayerController: VideoPlayerController.network(widget.videoURL),
     );
-    _controller.setLooping(true);
-    _controller.initialize().then((_) => setState(() {}));
-    _controller.play();
     super.initState();
   }
 
@@ -37,17 +37,28 @@ class _PlayVideoState extends State<PlayVideo> {
       appBar: AppBar(
         title: const Text('Play Video'),
       ),
-      body: Center(
-        child: Column(children: [
-          AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlickVideoPlayer(
+                flickManager: flickManager,
+                flickVideoWithControls: const FlickVideoWithControls(
+                  controls: FlickPortraitControls(),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(widget.videoName),
+              const SizedBox(
+                height: 10,
+              ),
+              Text('Tutor Name : '+widget.tutorName),
+            ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Text(widget.videoName),
-        ]),
+        ),
       ),
     );
   }

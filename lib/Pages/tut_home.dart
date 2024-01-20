@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/constants.dart';
+import 'package:expert_ease/Pages/manage_tutor_profile.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
 import 'package:expert_ease/Pages/tutor_vdo.dart';
+import 'package:expert_ease/Pages/video_upload.dart';
+import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,29 +18,60 @@ class tutScreen extends StatefulWidget {
 
 class _tutScreenState extends State<tutScreen> {
   int _selectedIndex = 0;
+  Map<String, dynamic>? tutorData;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
+  String? userName;
 
+  @override
+  void initState() {
+    super.initState();
+    user = _auth.currentUser;
+    // Retrieve the user's name from the 'userNewProfile' collection
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          userName = snapshot.data()?['name'];
+        });
+      }
+    });
+
+    // Fetch tutor data and update the class-level tutorData
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          tutorData = snapshot.data();
+        });
+      }
+    });
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     User? user = _auth.currentUser;
-    var size = MediaQuery.of(context)
-        .size; //this gonna give us total height and with of our device
+   
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavBar(),
       body: Stack(
         children: <Widget>[
           Container(
-            // Here the height of the container is 45% of our total height
+           
             height: size.height * .45,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 199, 184, 245),
-            //    image: DecorationImage(
-            //     alignment: Alignment.centerLeft,
-            //     image: SvgPicture.asset("assets/icons/meditation_bg.svg"),
-            //  ),
+            
             ),
           ),
           SafeArea(
@@ -55,10 +89,10 @@ class _tutScreenState extends State<tutScreen> {
                     ),
                   ),
                   Text(
-                    "Hello ${user?.email ?? 'User'}",
+                    "Hello ${userName ?? user?.email}",
                     style: Theme.of(context)
                         .textTheme
-                        .displaySmall
+                        .titleLarge
                         ?.copyWith(fontWeight: FontWeight.w900),
                   ),
                   SearchBar(),
@@ -72,7 +106,14 @@ class _tutScreenState extends State<tutScreen> {
                         CategoryCard(
                           title: "Video Upload",
                           svgSrc: "assets/icons/video_upload.svg",
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return VideoUploadingPage();
+                              }),
+                            );
+                          },
                         ),
                         CategoryCard(
                           title: "View Videos",
@@ -81,33 +122,35 @@ class _tutScreenState extends State<tutScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return TutVdo();
+                                return VideoList();
                               }),
                             );
                           },
                         ),
                         CategoryCard(
-                          title: "About You",
-                          svgSrc: "assets/icons/about_you.svg",
-                          press: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  // Pass the current user's data to TutorDetails
-                                  return TutorDetails(tutorData: {
-                                    'email': user?.email,
-                                    // Add other user data fields as needed
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                            title: "About You",
+                            svgSrc: "assets/icons/about_you.svg",
+                            press: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TutorDetails(tutorData: tutorData ?? {}),
+                                ),
+                              );
+                            }),
                         CategoryCard(
                           title: "Profile",
                           svgSrc: "assets/icons/profile.svg",
-                          press: () {},
+                          press: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UpdateUserProfile(
+                                        onTap: () {},
+                                      )),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -125,13 +168,15 @@ class _tutScreenState extends State<tutScreen> {
 class CategoryCard extends StatelessWidget {
   final String svgSrc;
   final String title;
-  final Function() press;
-  const CategoryCard(
-      {super.key,
-      required this.svgSrc,
-      required this.title,
-      required this.press});
+  final Function()? press; // Updated the function signature
+  final Map<String, dynamic>? tutorData; // Added tutorData parameter
 
+  const CategoryCard({
+    required this.svgSrc,
+    required this.title,
+    required this.press,
+    this.tutorData, // Updated the constructor to accept tutorData
+  });
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -275,7 +320,6 @@ class BottomNavItem extends StatelessWidget {
         // Check if press is not null before invoking it
         if (press != null) {
           press!();
-          
         }
       },
       child: Column(

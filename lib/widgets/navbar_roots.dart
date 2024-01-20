@@ -1,7 +1,8 @@
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
-import 'package:expert_ease/Pages/vdo.dart';
+import 'package:expert_ease/Pages/video_upload.dart';
+import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class _NavBarRootsState extends State<NavBarRoots> {
     MessageScreen(),
 
     //Schedule Screen
-    Container(),
+    VideoList(),
 
     //Settings Screen
     SettingsScreen(),

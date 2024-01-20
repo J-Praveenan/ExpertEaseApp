@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expert_ease/Pages/learner_home.dart';
 import 'package:expert_ease/Pages/login_page.dart';
-import 'package:expert_ease/Pages/manage_tutor_profile.dart';
+import 'package:expert_ease/Pages/manage_learner_profile%20.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/tut_home.dart';
 import 'package:expert_ease/services/auth/auth_service.dart';
@@ -9,18 +10,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SettingsScreen extends StatefulWidget {
+class LearnerSettingsScreen extends StatefulWidget {
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<LearnerSettingsScreen> createState() => _LearnerSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _LearnerSettingsScreenState extends State<LearnerSettingsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
 
- @override
+  @override
   void initState() {
     super.initState();
     user = _auth.currentUser;
@@ -37,7 +38,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     });
   }
-
 
   // sign user out
   void signOut() {
@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-   // User? user = _auth.currentUser;
+    // User? user = _auth.currentUser;
     return Material(
       child: SingleChildScrollView(
         child: Padding(
@@ -80,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   backgroundImage: AssetImage("images/tutor1.jpeg"),
                 ),
                 title: Text(
-                  "${userName ??user?.email }",
+                  "${userName ?? user?.email}",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 25,
@@ -94,10 +94,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   //manage account function call
 
                   Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => tutScreen(),));
-                  
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LearnerHomeScreen(),
+                      ));
                 },
                 leading: Container(
                   padding: EdgeInsets.all(10),
@@ -123,12 +123,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SizedBox(height: 20),
               ListTile(
                 onTap: () {
-                      //manage account function call
+                  //manage account function call
 
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => UpdateUserProfile(onTap: () {  },)),
+                        builder: (context) => UpdateLearnerProfile(
+                              onTap: () {},
+                            )),
                   );
                 },
                 leading: Container(
@@ -138,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                   CupertinoIcons.person,
+                    CupertinoIcons.person,
                     color: Colors.deepPurple,
                     size: 35,
                   ),
@@ -155,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SizedBox(height: 20),
               // ListTile(
               //   onTap: () {
-                  
+
               //   },
               //   leading: Container(
               //     padding: EdgeInsets.all(10),
@@ -181,12 +183,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // SizedBox(height: 20),
               ListTile(
                 onTap: () {
-                  
                   Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MessageScreen(),)
-                  );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MessageScreen(),
+                      ));
                 },
                 leading: Container(
                   padding: EdgeInsets.all(10),

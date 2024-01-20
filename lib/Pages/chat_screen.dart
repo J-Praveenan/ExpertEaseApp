@@ -206,7 +206,7 @@ Widget _buildMessageInput() {
               ),
               ),
               Spacer(),
-              Padding(padding: EdgeInsets.only(right: 10),
+              Padding(padding: EdgeInsets.only(left: 0),
               child: IconButton(
               onPressed: sendMessage,
               icon: const Icon(

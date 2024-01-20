@@ -58,37 +58,37 @@ class TutVdo extends StatelessWidget {
                       width: size.width * .5, // it just take the 50% width
                       child: SearchBar(),
                     ),
-                    Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      children: <Widget>[
-                        SeassionCard(
-                          seassionNum: 1,
-                          isDone: true,
-                          press: () {},
-                        ),
-                        SeassionCard(
-                          seassionNum: 2,
-                          press: () {},
-                        ),
-                        SeassionCard(
-                          seassionNum: 3,
-                          press: () {},
-                        ),
-                        SeassionCard(
-                          seassionNum: 4,
-                          press: () {},
-                        ),
-                        SeassionCard(
-                          seassionNum: 5,
-                          press: () {},
-                        ),
-                        SeassionCard(
-                          seassionNum: 6,
-                          press: () {},
-                        ),
-                      ],
-                    ),
+                    // Wrap(
+                    //   spacing: 20,
+                    //   runSpacing: 20,
+                    //   children: <Widget>[
+                    //     SeassionCard(
+                    //       seassionNum: 1,
+                    //       isDone: true,
+                    //       press: () {},
+                    //     ),
+                    //     SeassionCard(
+                    //       seassionNum: 2,
+                    //       press: () {},
+                    //     ),
+                    //     SeassionCard(
+                    //       seassionNum: 3,
+                    //       press: () {},
+                    //     ),
+                    //     SeassionCard(
+                    //       seassionNum: 4,
+                    //       press: () {},
+                    //     ),
+                    //     SeassionCard(
+                    //       seassionNum: 5,
+                    //       press: () {},
+                    //     ),
+                    //     SeassionCard(
+                    //       seassionNum: 6,
+                    //       press: () {},
+                    //     ),
+                    //   ],
+                    // ),
 
                   ],
                 ),

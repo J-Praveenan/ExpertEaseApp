@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen.dart';
+import 'package:expert_ease/Pages/setting_screen_learner.dart';
 import 'package:expert_ease/Pages/tutor_details_display.dart';
+import 'package:expert_ease/intro_screens/view_video_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,26 +22,84 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   List<Map<String, dynamic>> tutors = [];
+  String? userName;
 
-  @override
+   @override
   void initState() {
     super.initState();
     user = _auth.currentUser;
-    loadTutors();
-  }
-
-  Future<void> loadTutors() async {
-    final QuerySnapshot tutorSnapshot = await _firestore
-        .collection('users')
-        .where('role', isEqualTo: 'Tutor')
-        .get();
-
-    setState(() {
-      tutors = tutorSnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+    // Retrieve the user's name from the 'userNewProfile' collection
+    _firestore
+        .collection('userNewProfile')
+        .doc(user?.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          userName = snapshot.data()?['name'];
+           loadTutors();
+        });
+      }
     });
   }
+
+  // Future<void> loadTutors() async {
+  //   final QuerySnapshot tutorSnapshot = await _firestore
+  //       .collection('users')
+  //       .where('role', isEqualTo: 'Tutor')
+  //       .get();
+
+  //   setState(() {
+  //     tutors = tutorSnapshot.docs
+  //         .map((doc) => doc.data() as Map<String, dynamic>)
+  //         .toList();
+  //   });
+  // }
+
+Future<void> loadTutors() async {
+  final QuerySnapshot tutorSnapshot = await _firestore
+      .collection('users')
+      .where('role', isEqualTo: 'Tutor')
+      .get();
+
+  for (final doc in tutorSnapshot.docs) {
+    final Map<String, dynamic>? docData = doc.data() as Map<String, dynamic>?;
+
+    if (docData != null) {
+      final tutorUID = docData['uid'];
+
+      if (tutorUID != null) {
+        final tutorSubjectSnapshot =
+            await _firestore.collection('userNewProfile').doc(tutorUID).get();
+
+        final Map<String, dynamic>? tutorSubjectData =
+            tutorSubjectSnapshot.data() as Map<String, dynamic>?;
+
+      if (tutorSubjectData != null) {
+          final tutorName = tutorSubjectData['name'];
+          final tutorSubject = tutorSubjectData['subject'];
+          final tutorBio = tutorSubjectData['bio'];
+          final tutorLocation = tutorSubjectData['address'];
+         
+
+          // Do something with tutorEmail and tutorSubject
+          print('Tutor Name: $tutorName, Tutor Subject: $tutorSubject');
+
+          setState(() {
+            tutors.add({
+              'name': tutorName,
+              'subject': tutorSubject,
+              'bio':tutorBio,
+              'address':tutorLocation,
+              'uid':tutorUID,
+            });
+          });
+        }
+      }
+    }
+  }
+}
+
 
   List<String> symptoms = [
     "ICT",
@@ -72,10 +132,10 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Hello ${user?.email ?? 'User'}",
+                    "Hello ${userName ?? user?.email}",
                     style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   CircleAvatar(
@@ -101,117 +161,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF7165D6),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Color(0xFF7165D6),
-                            size: 35,
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        Text(
-                          "Online Class",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Make an Appointment",
-                          style: TextStyle(
-                            color: Colors.white54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF0EEFA),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.home_filled,
-                            color: Color(0xFF7165D6),
-                            size: 35,
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        Text(
-                          "Onsite Class",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Call the Tutor home",
-                          style: TextStyle(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            
             SizedBox(height: 25),
             Padding(
               padding: EdgeInsets.only(left: 15),
               child: Text(
                 "What are your preferred subjects?",
                 style: TextStyle(
-                  fontSize: 23,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Colors.black54,
                 ),
@@ -237,6 +194,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           spreadRadius: 2,
                         ),
                       ],
+                      
                     ),
                     child: Center(
                       child: Text(
@@ -258,7 +216,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
               child: Text(
                 "Popular Tutors",
                 style: TextStyle(
-                  fontSize: 23,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Colors.black54,
                 ),
@@ -304,17 +262,18 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           backgroundImage: AssetImage("images/${imgs[index]}"),
                         ),
                         Text(
-                          "${tutorData['email']}",
+                          "${tutorData['name']}",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black54,
                           ),
                         ),
                         Text(
-                          "ICT",
+                          "${tutorData['subject']}",
                           style: TextStyle(
                             color: Colors.black45,
+                            fontSize: 12,
                           ),
                         ),
                         Row(
@@ -324,11 +283,13 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                             Icon(
                               Icons.star,
                               color: Colors.amber,
+                              size: 12,
                             ),
                             Text(
                               "4.9",
                               style: TextStyle(
                                 color: Colors.black45,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -349,10 +310,10 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
       MessageScreen(),
 
       // Schedule Screen
-      Container(),
+      VideoList(),
 
       // Settings Screen
-      SettingsScreen(),
+      LearnerSettingsScreen(),
     ];
     return Scaffold(
       body: IndexedStack(
@@ -389,8 +350,8 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
               label: "Chat",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month),
-              label: "Schedule",
+              icon: Icon(Icons.video_collection),
+              label: "Videos",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

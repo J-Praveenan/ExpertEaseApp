@@ -13,11 +13,12 @@ class StoreVideo {
     return downloadURL;
   }
 
-  Future<void> saveVideoData(String videoDownloadUrl) async {
+  Future<void> saveVideoData(String videoDownloadUrl, String videoName, String tutorName) async {
     await _fireStore.collection('videos').add({
       'url': videoDownloadUrl,
       'timeStamp': FieldValue.serverTimestamp(),
-      'name': 'User Video'
+      'name': videoName, // Use the provided user's name
+      'tutorName': tutorName,
     });
   }
 }

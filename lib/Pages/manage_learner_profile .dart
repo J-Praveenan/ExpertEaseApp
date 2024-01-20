@@ -8,30 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class UpdateUserProfile extends StatefulWidget {
+class UpdateLearnerProfile extends StatefulWidget {
   final void Function()? onTap;
-  const UpdateUserProfile({super.key, required this.onTap});
+  const UpdateLearnerProfile({super.key, required this.onTap});
 
   @override
-  State<UpdateUserProfile> createState() => _UpdateUserProfileState();
+  State<UpdateLearnerProfile> createState() => _UpdateLearnerProfileState();
 }
 
-class _UpdateUserProfileState extends State<UpdateUserProfile> {
+class _UpdateLearnerProfileState extends State<UpdateLearnerProfile> {
   late Color myColor;
   late Size mediaSize;
   final nameController = TextEditingController();
   final addressController = TextEditingController();
-  final subjectController = TextEditingController();
-  final mediumController = TextEditingController();
-  final bioController = TextEditingController();
+  final mobileController = TextEditingController();
+
   Uint8List? _image;
   // String selectedRole = "0";
   bool rememberUser = false;
 
-  
-
   // select Image
-   void selectImage() async {
+  void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
@@ -39,20 +36,15 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
   }
 
   //sign up user
-  void createNewProfile() async {
-
-
+  void createNewLearnerProfile() async {
     // get auth service
     final authService = Provider.of<AuthService>(context, listen: false);
     // String roleName = await getRoleName(selectedRole);
     try {
-      await authService.createNewUserProfile(
-       
+      await authService.createNewLearnerProfile(
         nameController.text,
         addressController.text,
-        subjectController.text,
-        mediumController.text,
-        bioController.text,
+        mobileController.text,
         _image, // Pass the image to the method
       );
     } catch (e) {
@@ -68,9 +60,7 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
   void dispose() {
     nameController.dispose();
     addressController.dispose();
-    subjectController.dispose();
-    mediumController.dispose();
-    bioController.dispose();
+    mobileController.dispose();
     super.dispose();
   }
 
@@ -98,7 +88,7 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
         backgroundColor: Colors.transparent,
         body: ListView(children: [
           Positioned(top: 30, child: _buildTop()),
-          Positioned(bottom: 0, child: _buildBottom()),
+          Positioned(top: 100, child: _buildBottom()),
         ]),
       ),
     );
@@ -108,41 +98,36 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
     return SizedBox(
       width: mediaSize.width,
       child: Container(
-          
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          const SizedBox(height: 20),
+          Stack(
             children: [
-              const SizedBox(height: 20),
-              Stack(
-                children: [
-                  _image != null
-                      ? CircleAvatar(
-                          radius: 60,
-                          backgroundImage: MemoryImage(_image!),
-                        )
-                      : const CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(
-                              'https://cdn.vectorstock.com/i/preview-1x/52/68/purple-user-icon-in-the-circle-thin-line-vector-23745268.webp'),
-                        ),
-                  Positioned(
-                    bottom: -10,
-                    left: 80,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: const Icon(Icons.add_a_photo),
-                      color:
-                          Color.fromARGB(255, 249, 250, 250), // Customize the add photo button color
+              _image != null
+                  ? CircleAvatar(
+                      radius: 60,
+                      backgroundImage: MemoryImage(_image!),
+                    )
+                  : const CircleAvatar(
+                      radius: 60,
+                      backgroundImage: NetworkImage(
+                          'https://cdn.vectorstock.com/i/preview-1x/52/68/purple-user-icon-in-the-circle-thin-line-vector-23745268.webp'),
                     ),
-                  ),
-                ],
+              Positioned(
+                bottom: -10,
+                left: 80,
+                child: IconButton(
+                  onPressed: selectImage,
+                  icon: const Icon(Icons.add_a_photo),
+                  color: Color.fromARGB(255, 249, 250,
+                      250), // Customize the add photo button color
+                ),
               ),
-            ]
+            ],
           ),
-          ),
+        ]),
+      ),
     );
-      
   }
 
   Widget _buildBottom() {
@@ -153,6 +138,8 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
             borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
         )),
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -164,28 +151,19 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
 
   Widget _buildForm() {
     return Column(
-      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         _buildGreyText("Name"),
         _buildInputFieldEmail(nameController),
         const SizedBox(height: 20),
         _buildGreyText("Address"),
-         _buildInputFieldEmail(addressController),
+        _buildInputFieldEmail(addressController),
         const SizedBox(height: 20),
-        _buildGreyText("Subject"),
-         _buildInputFieldEmail(subjectController),
+        _buildGreyText("Mobile Number"),
+        _buildInputFieldEmail(mobileController),
+       
         const SizedBox(height: 20),
-         _buildGreyText("medium"),
-         _buildInputFieldEmail(mediumController),
-        const SizedBox(height: 20),
-         _buildGreyText("Bio"),
-         _buildInputFieldEmail(bioController),
-        const SizedBox(height: 20),
-
-        MyButton(onTap: createNewProfile, text: "Save"),
-      
+        MyButton(onTap: createNewLearnerProfile, text: "Save"),
       ],
     );
   }
@@ -194,30 +172,22 @@ class _UpdateUserProfileState extends State<UpdateUserProfile> {
     return Container(
       alignment: Alignment.center,
       child: Text(
-        
         text,
         style: const TextStyle(
-            
             color: Color.fromARGB(255, 107, 106, 106), fontSize: 15),
       ),
     );
   }
 
-  Widget _buildInputFieldEmail(TextEditingController controller,) {
+  Widget _buildInputFieldEmail(
+    TextEditingController controller,
+  ) {
     return TextField(
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 13),
       controller: controller,
-      decoration: const InputDecoration(
-        
-        
-      ),
+      decoration: const InputDecoration(),
       obscureText: false,
     );
   }
-
- 
-
-
-
 }
