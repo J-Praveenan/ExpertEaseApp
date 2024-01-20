@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/chat_screen.dart';
-import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/learner_messages_screen.dart';
 import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -177,7 +177,7 @@ class _TutorDetailsTutorState extends State<TutorDetailsTutor> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                MessageScreen()));
+                                                LearnerMessageScreen()));
                                   },
                                   child: Icon(
                                     CupertinoIcons.chat_bubble_text_fill,

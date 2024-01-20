@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/constants.dart';
 import 'package:expert_ease/Pages/manage_tutor_profile.dart';
-import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/Pages/learner_messages_screen.dart';
 import 'package:expert_ease/Pages/setting_screen_tutor.dart';
 import 'package:expert_ease/Pages/tutor_details_display%20_for_tutor.dart';
 import 'package:expert_ease/Pages/tutor_details_display_for_learner.dart';
@@ -271,7 +271,7 @@ class BottomNavBar extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MessageScreen(),
+                    builder: (context) => LearnerMessageScreen(),
                   ));
             },
           ),
