@@ -49,10 +49,31 @@ void sendMessage() async {
             padding:const EdgeInsets.only(top: 8), 
             child:Row( 
             children: [ 
-              CircleAvatar( 
-                radius: 25,
-                backgroundImage: AssetImage("images/tutor1.jpeg"),
-              ),
+            
+              FutureBuilder(
+                  future: _getImageUrl(widget.receiverUserID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(); // You can return a loading indicator here
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    final imageUrl = snapshot.data as String?;
+
+                    return Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: imageUrl != null
+                            ? NetworkImage(imageUrl)
+                            : AssetImage("images/default_avatar.png")
+                                as ImageProvider<
+                                    Object>?, // Use a default image if no URL is available
+                      ),
+                    );
+                  },
+                ),
               Padding(padding: EdgeInsets.only(left: 10),
               child: Text( 
                widget.receiverUserEmail,
@@ -64,27 +85,7 @@ void sendMessage() async {
             ],
           ),
         ),
-        // actions: [ 
-        //   Padding(padding: EdgeInsets.only(top: 8,right: 10),
-        //   child: Icon( 
-        //     Icons.call,
-        //     color: Colors.white,
-        //     size: 26,
-        //   ),
-        //   ),
-        //    Padding(padding: EdgeInsets.only(top: 8,right: 10),
-        //   child: Icon( 
-        //     Icons.video_call,
-        //     color: Colors.white,
-        //     size: 30,
-        //   ),),
-        //    Padding(padding: EdgeInsets.only(top: 8,right: 10),
-        //   child: Icon( 
-        //     Icons.more_vert,
-        //     color: Colors.white,
-        //     size: 26,
-        //   ),),
-        // ],
+       
         ),
 
       ),
@@ -223,6 +224,20 @@ Widget _buildMessageInput() {
         ],
       ),
     );
+  }
+
+   Future<String?> _getImageUrl(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('userNewProfile')
+          .doc(userId)
+          .get();
+      final data = snapshot.data() as Map<String, dynamic>;
+      return data['profileImage'] as String?;
+    } catch (e) {
+      print('Error getting user image URL: $e');
+      return null;
+    }
   }
 
 

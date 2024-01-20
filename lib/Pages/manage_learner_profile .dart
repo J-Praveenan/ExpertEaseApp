@@ -24,7 +24,6 @@ class _UpdateLearnerProfileState extends State<UpdateLearnerProfile> {
   final mobileController = TextEditingController();
 
   Uint8List? _image;
-  // String selectedRole = "0";
   bool rememberUser = false;
 
   // select Image

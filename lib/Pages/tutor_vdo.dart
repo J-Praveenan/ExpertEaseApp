@@ -58,38 +58,7 @@ class TutVdo extends StatelessWidget {
                       width: size.width * .5, // it just take the 50% width
                       child: SearchBar(),
                     ),
-                    // Wrap(
-                    //   spacing: 20,
-                    //   runSpacing: 20,
-                    //   children: <Widget>[
-                    //     SeassionCard(
-                    //       seassionNum: 1,
-                    //       isDone: true,
-                    //       press: () {},
-                    //     ),
-                    //     SeassionCard(
-                    //       seassionNum: 2,
-                    //       press: () {},
-                    //     ),
-                    //     SeassionCard(
-                    //       seassionNum: 3,
-                    //       press: () {},
-                    //     ),
-                    //     SeassionCard(
-                    //       seassionNum: 4,
-                    //       press: () {},
-                    //     ),
-                    //     SeassionCard(
-                    //       seassionNum: 5,
-                    //       press: () {},
-                    //     ),
-                    //     SeassionCard(
-                    //       seassionNum: 6,
-                    //       press: () {},
-                    //     ),
-                    //   ],
-                    // ),
-
+                   
                   ],
                 ),
               ),
@@ -121,8 +90,7 @@ class SeassionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(13),
         child: Container(
           width: constraint.maxWidth / 2 -
-              10, // constraint.maxWidth provide us the available with for this widget
-          // padding: EdgeInsets.all(16),
+              10,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(13),

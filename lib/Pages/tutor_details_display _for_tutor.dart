@@ -1,28 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expert_ease/Pages/chat_screen.dart';
+import 'package:expert_ease/Pages/messages_screen.dart';
+import 'package:expert_ease/intro_screens/video_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class TutorDetails extends StatefulWidget {
-
- 
+class TutorDetailsTutor extends StatefulWidget {
   final Map<String, dynamic> tutorData;
-  TutorDetails({required this.tutorData});
+  TutorDetailsTutor({required this.tutorData});
 
   @override
-  State<TutorDetails> createState() => _TutorDetailsState();
+  State<TutorDetailsTutor> createState() => _TutorDetailsTutorState();
 }
 
-class _TutorDetailsState extends State<TutorDetails> {
-final FirebaseAuth _auth = FirebaseAuth.instance;
+class _TutorDetailsTutorState extends State<TutorDetailsTutor> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   List<Map<String, dynamic>> tutors = [];
-    String? userName;
+  String? userName;
+  String? imageUrl;
+  String? imageTutorUrl;
 
-     @override
+  @override
   void initState() {
     super.initState();
     user = _auth.currentUser;
@@ -35,57 +37,58 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
-           loadTutors();
+          imageUrl = snapshot.data()?['profileImage'];
+          loadTutors();
         });
       }
     });
   }
 
+  Future<void> loadTutors() async {
+    final QuerySnapshot tutorSnapshot = await _firestore
+        .collection('users')
+        .where('role', isEqualTo: 'Tutor')
+        .get();
 
-Future<void> loadTutors() async {
-  final QuerySnapshot tutorSnapshot = await _firestore
-      .collection('users')
-      .where('role', isEqualTo: 'Tutor')
-      .get();
+    for (final doc in tutorSnapshot.docs) {
+      final Map<String, dynamic>? docData = doc.data() as Map<String, dynamic>?;
 
-  for (final doc in tutorSnapshot.docs) {
-    final Map<String, dynamic>? docData = doc.data() as Map<String, dynamic>?;
+      if (docData != null) {
+        final tutorUID = docData['uid'];
 
-    if (docData != null) {
-      final tutorUID = docData['uid'];
+        if (tutorUID != null) {
+          final tutorSubjectSnapshot =
+              await _firestore.collection('userNewProfile').doc(tutorUID).get();
 
-      if (tutorUID != null) {
-        final tutorSubjectSnapshot =
-            await _firestore.collection('userNewProfile').doc(tutorUID).get();
+          final Map<String, dynamic>? tutorSubjectData =
+              tutorSubjectSnapshot.data() as Map<String, dynamic>?;
 
-        final Map<String, dynamic>? tutorSubjectData =
-            tutorSubjectSnapshot.data() as Map<String, dynamic>?;
+          if (tutorSubjectData != null) {
+            final tutorName = tutorSubjectData['name'];
+            final tutorSubject = tutorSubjectData['subject'];
+            final tutorBio = tutorSubjectData['bio'];
+            final tutorLocation = tutorSubjectData['address'];
+            imageTutorUrl = tutorSubjectSnapshot.data()?['profileImage'];
 
-      if (tutorSubjectData != null) {
-          final tutorName = tutorSubjectData['name'];
-          final tutorSubject = tutorSubjectData['subject'];
-          final tutorBio = tutorSubjectData['bio'];
-          final tutorLocation = tutorSubjectData['address'];
-         
+            // Do something with tutorEmail and tutorSubject
+            print('Tutor Name: $tutorName, Tutor Subject: $tutorSubject');
 
-          // Do something with tutorEmail and tutorSubject
-          print('Tutor Name: $tutorName, Tutor Subject: $tutorSubject');
-
-          setState(() {
-            tutors.add({
-              'name': tutorName,
-              'subject': tutorSubject,
-              'bio':tutorBio,
-              'address':tutorLocation,
-              'uid':tutorUID,
+            setState(() {
+              tutors.add({
+                'name': tutorName,
+                'subject': tutorSubject,
+                'bio': tutorBio,
+                'address': tutorLocation,
+                'profileImage': imageUrl,
+                'uid': tutorUID,
+                'profileImage': imageTutorUrl,
+              });
             });
-          });
+          }
         }
       }
     }
   }
-}
-
 
   List imgs = [
     "tutor1.jpeg",
@@ -94,11 +97,8 @@ Future<void> loadTutors() async {
     "tutor4.jpeg",
   ];
 
-  
-
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       backgroundColor: Color(0xFF7165D6),
       body: SingleChildScrollView(
@@ -138,8 +138,11 @@ Future<void> loadTutors() async {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CircleAvatar(
-                            radius: 35,
-                            backgroundImage: AssetImage("images/tutor1.jpeg"),
+                            radius: 30,
+                            backgroundImage: imageUrl != null
+                                ? NetworkImage(imageUrl!)
+                                : AssetImage("images/default_avatar.png")
+                                    as ImageProvider<Object>?,
                           ),
                           SizedBox(height: 15),
                           Text(
@@ -173,8 +176,8 @@ Future<void> loadTutors() async {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatScreen(receiverUserEmail: widget.tutorData['name'],
-                receiverUserID:widget.tutorData['uid'],)));
+                                            builder: (context) =>
+                                                MessageScreen()));
                                   },
                                   child: Icon(
                                     CupertinoIcons.chat_bubble_text_fill,
@@ -276,7 +279,7 @@ Future<void> loadTutors() async {
                       scrollDirection: Axis.horizontal,
                       itemCount: tutors.length,
                       itemBuilder: (context, Index) {
-                         Map<String, dynamic> tutorData = tutors[Index];
+                        Map<String, dynamic> tutorData = tutors[Index];
                         return Container(
                           margin: EdgeInsets.all(10),
                           padding: EdgeInsets.symmetric(vertical: 5),
@@ -297,12 +300,16 @@ Future<void> loadTutors() async {
                               children: [
                                 ListTile(
                                   leading: CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage:
-                                        AssetImage("images/${imgs[Index]}"),
+                                    radius: 30,
+                                    backgroundImage: imageTutorUrl != null
+                                        ? NetworkImage(
+                                            "${tutorData['profileImage']}")
+                                        : AssetImage(
+                                                "images/default_avatar.png")
+                                            as ImageProvider<Object>?,
                                   ),
                                   title: Text(
-                                   "${tutorData['name']}",
+                                    "${tutorData['name']}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -395,11 +402,17 @@ Future<void> loadTutors() async {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             
             ),
             SizedBox(height: 15),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return VideoList();
+                  }),
+                );
+              },
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(vertical: 15),

@@ -256,66 +256,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // Widget _buildInputFieldRole() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       _buildGreyText("Select your role"),
-  //       Container(
-  //         padding: EdgeInsets.symmetric(horizontal: 10),
-  //         decoration: BoxDecoration(
-  //           borderRadius: BorderRadius.circular(8),
-  //           border: Border.all(color: Color(0xFF7165D6)),
-  //         ),
-  //         child: StreamBuilder<QuerySnapshot>(
-  //           stream: FirebaseFirestore.instance.collection('roles').snapshots(),
-  //           builder: (context, snapshot) {
-  //             List<DropdownMenuItem<String>> rolesItems = [];
-  //             if (!snapshot.hasData) {
-  //               return CircularProgressIndicator();
-  //             } else {
-  //               final roles = snapshot.data?.docs.reversed.toList();
-  //               rolesItems.add(
-  //                 DropdownMenuItem(
-  //                   value: "0",
-  //                   child: Text('Select your Role'),
-  //                 ),
-  //               );
-
-  //               for (var role in roles!) {
-  //                 rolesItems.add(
-  //                   DropdownMenuItem(
-  //                     value: role.id,
-  //                     child: Text(
-  //                       role['name'],
-  //                     ),
-  //                   ),
-  //                 );
-  //               }
-  //             }
-  //             return DropdownButton<String>(
-  //               items: rolesItems,
-  //               onChanged: (rolesValue) {
-  //                 setState(() {
-  //                   selectedRole = rolesValue!;
-  //                 });
-  //                 print(rolesValue);
-  //               },
-  //               value: selectedRole,
-  //               isExpanded: false,
-  //               underline: Container(), // Remove the default underline
-  //               icon: Icon(
-  //                 Icons.arrow_drop_down_circle,
-  //                 color: Color(0xFF7165D6),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
+ 
   Widget _buildLoginText() {
     return Center(
       child: Column(

@@ -19,6 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user;
   String? userName;
+  String? imageUrl;
 
  @override
   void initState() {
@@ -33,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (snapshot.exists) {
         setState(() {
           userName = snapshot.data()?['name'];
+          imageUrl = snapshot.data()?['profileImage'];
         });
       }
     });
@@ -75,9 +77,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               SizedBox(height: 30),
               ListTile(
-                leading: CircleAvatar(
+               leading: CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage("images/tutor1.jpeg"),
+                  backgroundImage: imageUrl != null
+                      ? NetworkImage(imageUrl!)
+                      : AssetImage("images/default_avatar.png") as ImageProvider<Object>?,
                 ),
                 title: Text(
                   "${userName ??user?.email }",
@@ -153,32 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trailing: Icon(Icons.arrow_forward_ios_rounded),
               ),
               SizedBox(height: 20),
-              // ListTile(
-              //   onTap: () {
-                  
-              //   },
-              //   leading: Container(
-              //     padding: EdgeInsets.all(10),
-              //     decoration: BoxDecoration(
-              //       color: Colors.indigo.shade100,
-              //       shape: BoxShape.circle,
-              //     ),
-              //     child: Icon(
-              //       Icons.privacy_tip_outlined,
-              //       color: Colors.indigo,
-              //       size: 35,
-              //     ),
-              //   ),
-              //   title: Text(
-              //     "Privacy",
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.w500,
-              //       fontSize: 20,
-              //     ),
-              //   ),
-              //   trailing: Icon(Icons.arrow_forward_ios_rounded),
-              // ),
-              // SizedBox(height: 20),
+      
               ListTile(
                 onTap: () {
                   
