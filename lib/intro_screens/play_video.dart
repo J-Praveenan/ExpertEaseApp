@@ -38,11 +38,15 @@ class _PlayVideoState extends State<PlayVideo> {
         title: const Text('Play Video'),
       ),
       body: SingleChildScrollView(
+       
         child: Center(
+          
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              
               FlickVideoPlayer(
+                
                 flickManager: flickManager,
                 flickVideoWithControls: const FlickVideoWithControls(
                   controls: FlickPortraitControls(),

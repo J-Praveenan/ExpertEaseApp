@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 0),
+          const SizedBox(height: 50),
           Image.asset(
             "images/eea.png", 
             height: 140, 

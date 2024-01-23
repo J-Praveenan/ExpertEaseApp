@@ -99,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 0),
+          const SizedBox(height: 50),
           Image.asset(
             "images/eea.png",
             height: 140,
@@ -186,20 +186,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   underline: Container(), // Remove the default underline
                   icon: Padding(
                     padding: EdgeInsets.only(
-                        left: 130), // Adjust the padding as needed
+                        left: 198), // Adjust the padding as needed
                     child: Icon(
                       Icons.arrow_drop_down_circle,
                       color: Color(0xFF7165D6),
                     ),
                   ),
                   style: TextStyle(
-                   color: Colors.black,
+                    color: Colors.black,
                     fontSize: 16,
                   ),
                 ),
               );
             }),
-               const SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildGreyText("Email"),
         _buildInputFieldEmail(emailController),
         const SizedBox(height: 20),
@@ -212,7 +212,6 @@ class _RegisterPageState extends State<RegisterPage> {
         // _buildGreyText("Select your role"),
         // _buildInputFieldRole(roleController),
 
-        
         const SizedBox(height: 20),
         MyButton(onTap: signUp, text: "Register"),
         const SizedBox(height: 20),
@@ -229,7 +228,9 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildInputFieldEmail(TextEditingController controller,) {
+  Widget _buildInputFieldEmail(
+    TextEditingController controller,
+  ) {
     return TextField(
       controller: controller,
       decoration: const InputDecoration(
@@ -256,7 +257,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
- 
   Widget _buildLoginText() {
     return Center(
       child: Column(
