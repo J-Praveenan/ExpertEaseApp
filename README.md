@@ -2,7 +2,7 @@
 
 ## Group No: 41
 
-Welcome to ExpertEase - your innovative Tutor Finder App that revolutionizes the way you learn and connect with educators!
+Welcome to ExpertEase - Our innovative Tutor Finder App that revolutionizes the way you learn and connect with educators!
 
 ## Features
 
