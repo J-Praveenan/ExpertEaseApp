@@ -41,14 +41,10 @@ Welcome to ExpertEase - your innovative Tutor Finder App that revolutionizes the
 
 ## Installation
 
-To use ExpertEase, simply clone this repository and follow the setup instructions in the [installation guide](installation.md).
+To use ExpertEase, simply clone this repository 
 
 ## Contributors
 
-- John Doe
-- Jane Smith
-- Ahmad Khan
+- Praveenan Jeevarethnam
+- Neethika Hariharasakthy
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
